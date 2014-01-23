@@ -36,7 +36,9 @@ public class AndroidMockWS {
 	HTTP_STATUS_URL_MAP.put(HTTP_405_METHOD_NOT_ALLOWED, HTTP_405_METHOD_NOT_ALLOWED_URL);
     }
 
-    static final String FORCE_TEST_HTTP_RESPONSE="FORCE_TEST_HTTP_RESPONSE";
+    static final String META_ARG="META_ARG__";
+
+    static final String FORCE_TEST_HTTP_RESPONSE=META_ARG + "FORCE_TEST_HTTP_RESPONSE";
 
     public static String thisRoute = null;
 
