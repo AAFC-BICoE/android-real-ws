@@ -1,0 +1,42 @@
+
+ContainerWS.java,324
+    public ContainerWS(ContainerWS.ContainerWS22,604
+    public String name ContainerWS.name26,638
+    public Integer age ContainerWS.age27,676
+    public Integer time;ContainerWS.time28,705
+    @GET @Path(ContainerWS.@Path31,781
+    @GET @Path(ContainerWS.@Path44,1073
+    @GET @Path(ContainerWS.@Path52,1249
+
+Obj.java,112
+public class Obj{Obj4,34
+    public String height=Obj.height5,52
+    public Integer weight=Obj.weight6,83
+
+WSConstants.java,300
+public interface WSConstants{WSConstants4,34
+    public static final String BASEPATH=WSConstants.BASEPATH5,64
+    public static final String COUNT=WSConstants.COUNT7,119
+    public static final String ID=WSConstants.ID8,166
+    public static final String ID_PARAM=WSConstants.ID_PARAM9,206
+
+WS.java,699
+    public WS(WS.WS22,587
+    public String name WS.name25,611
+    public Integer age WS.age26,647
+    public Integer time;WS.time27,676
+    public WS listResources(WS.listResources30,712
+    @GET @Path(WS.@Path41,831
+    @GET @Path(WS.@Path46,913
+    @GET @Path(WS.@Path53,1055
+    @GET @Path(WS.@Path58,1148
+    @GET @Path(WS.@Path66,1303
+    @GET @Path(WS.@Path71,1388
+    @GET @Path(WS.@Path78,1533
+    @GET @Path(WS.@Path83,1611
+    @GET @Path(WS.@Path89,1748
+    @GET @Path(WS.@Path94,1849
+    @GET @Path(WS.@Path100,2009
+    @GET @Path(WS.@Path105,2089
+    public static final String count(WS.count111,2232
+    public String toString(WS.toString117,2319
