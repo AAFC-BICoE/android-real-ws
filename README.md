@@ -1,7 +1,7 @@
 
 What
 =====
-- Web service that randomly populates random number of SpecimenReplicate records.
+- Web service for SeqDB
 
 Build
 ======
@@ -25,8 +25,8 @@ Starts web server on port `8080`
 URLs to try
 ============
 
-## List all available URLs:
-URL: `http://localhost:8080/seqdb-ws/v1/`
+## List all available services via URIs:
+URI: `http://localhost:8080/seqdb-ws/v1/`
 
 ```
 {
@@ -64,10 +64,10 @@ URL: `http://localhost:8080/seqdb-ws/v1/`
 }
 ```
 
-To construct the full URL for the web service, combine the `payload.baseUrl` with one of the `payload.urls`.
+To construct the full URI for the web service, combine the `payload.baseUrl` with one of the `payload.urls`.
 
 ##Get count of containers:
-URL: `http://localhost:8080/seqdb-ws/v1/container/count`
+URI: `http://localhost:8080/seqdb-ws/v1/container/count`
 
 Should result in something like:
 ```
@@ -89,7 +89,7 @@ Should result in something like:
 
 
 ##Get all container GET URIs
-URL: `http://localhost:8080/seqdb-ws/v1/container`
+URI: `http://localhost:8080/seqdb-ws/v1/container`
 
 This should result in something like:
 
@@ -137,12 +137,12 @@ This should result in something like:
 
 }
 ```
-To construct the full URL for the web service, combine the `payload.baseUrl` with one of the `payload.urls`.
+To construct the full URI for the web service, combine the `payload.baseUrl` with one of the `payload.urls`.
 
 
 ##Get a single container record by primary key
 Now, use one of the above to get the full record:
-URL: http://localhost:8080/seqdb-ws/v1/container/1
+URI: http://localhost:8080/seqdb-ws/v1/container/1
 
 Should result in something like:
 ```
@@ -171,10 +171,10 @@ Should result in something like:
     }
 }
 ```
-Note above that payload.locations is the full URL to get the locations associated with a container.
+Note above that payload.locations is the full URI to get the locations associated with a container.
 It has the form: location/container/PRIMARY_KEY
 
-Using this URL http://localhost:8080/seqdb-ws/v1/location/container/1 should produce something like:
+Using this URI http://localhost:8080/seqdb-ws/v1/location/container/1 should produce something like:
 ```
 {
 
@@ -228,11 +228,11 @@ Using this URL http://localhost:8080/seqdb-ws/v1/location/container/1 should pro
 
 Debugging
 ====
-The payload.urls by default only contain an urlPath that needs to be combined with the pyload.baseUrl to get the resource service URL.
+The payload.urls by default only contain an urlPath that needs to be combined with the pyload.baseUrl to get the resource service URI.
 There is a debug mode that supports an easier interactive session and prints a `debugFullUrl` that allows easier access.
 This can be turned on in the following ways:
 - Invoke the `meta.debugToggleUrl`  Above:  http://localhost:8080/seqdb-ws/v1/DEBUG
-- Add `?meta__toggleDebug=true` to the base services URL: `http://localhost:8080/seqdb-ws/v1?meta__toggleDebug=true`
+- Add `?meta__toggleDebug=true` to the base services URI: `http://localhost:8080/seqdb-ws/v1?meta__toggleDebug=true`
 
 Turning on debugging will now cause all service requests that has `urls:` to include `debugFullUrl`s:
 ```
