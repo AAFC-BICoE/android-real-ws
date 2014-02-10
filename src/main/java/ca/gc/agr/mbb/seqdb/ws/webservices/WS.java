@@ -12,6 +12,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -51,7 +53,12 @@ public class WS extends BaseWS implements Nouns, WSConstants{
 
     // Base URL: list all possible WS urls
     @GET
-    public final String listResources(@Context UriInfo uri) {
+    public final String listResources(@Context UriInfo uri,
+				      @DefaultValue("false") @QueryParam("meta__toggleDebug") boolean toggleBoolean) {
+	System.err.println("toggleBoolean:" + toggleBoolean);
+	if(toggleBoolean){
+	    ALL_DEBUG = !ALL_DEBUG;
+	}
 	int total = 30;
 	PagingPayload paging = new PagingPayload(total);
 	

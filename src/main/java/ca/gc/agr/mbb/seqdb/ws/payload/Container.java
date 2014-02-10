@@ -6,7 +6,6 @@ public class Container implements Payload{
     public long id = 4666l;
     public String containerNumber = "43";
     public ContainerType containerType;
-    public long containerId;
     
     public String locations;
 

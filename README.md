@@ -1,131 +1,277 @@
 
 What
 =====
-- Web service for AAFC SeqDb android project
-- RESTful web services serving up JSON
-- 
+- Web service that randomly populates random number of SpecimenReplicate records.
 
-Web Services
+Build
+======
+
+```
+mvn -DskipTests clean compile assembly:single
+```
+
+Run
+====
+
+```
+export CLASSPATH=target/ws-1.0-SNAPSHOT-jar-with-dependencies.jar
+java ca.gc.agr.mbb.seqdb.ws.http.Main
+```
+Starts web server on port `8080`
+
+**Note: needs java 1.7.x**
+
+
+URLs to try
 ============
 
-## List all available URLs (including explicit failure URLs)
-URL: `http://localhost:4567/v1`
+## List all available URLs:
+URL: `http://localhost:8080/seqdb-ws/v1/`
 
 ```
-[
+{
 
-    {
-        "description": "container",
-        "path": "/v1/container",
-        "url": "http://localhost:4567/v1/container"
+    "meta": {
+        "ellapsedMillis": 0,
+        "thisUrl": "http://localhost:8080/seqdb-ws/v1/",
+        "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
+        "debug": false,
+        "payloadType": "pagingpayload",
+        "mode": "mock",
+        "timestamp": "Sun Feb 9 06:28:15 EST 2014"
     },
-    {
-        "description": "container count",
-        "path": "/v1/container/count/",
-        "url": "http://localhost:4567/v1/container/count/"
-    },
-    {
-        "description": "location",
-        "path": "/v1/location",
-        "url": "http://localhost:4567/v1/location"
-    },
-.
-.
-. [content removed]
-.
-.
-    {
-        "description": "storage count",
-        "url": "http://localhost:4567/v1/storage/count/?FORCE_TEST_HTTP_RESPONSE=400"
-    },
-    {
-        "description": "storage count",
-        "url": "http://localhost:4567/v1/storage/count/?FORCE_TEST_HTTP_RESPONSE=404"
-    },
-    {
-        "description": "storage count",
-        "url": "http://localhost:4567/v1/storage/count/?FORCE_TEST_HTTP_RESPONSE=405"
+    "payload": {
+        "limit": 100,
+        "baseUrl": "http://localhost:8080/seqdb-ws/v1/",
+        "offset": 0,
+        "urls": [
+            {
+                "urlPath": "container"
+            },
+            {
+                "urlPath": "container/count"
+            },
+            {
+                "urlPath": "location"
+            },
+            {
+                "urlPath": "location/count"
+            }
+        ],
+        "total": 4
     }
 
-]
+}
 ```
 
-##Get count of specimen replicates
-URL: `http://localhost:4567/v1/specimenReplicate/count/`
- (Note trailing slash)
+To construct the full URL for the web service, combine the `payload.baseUrl` with one of the `payload.urls`.
 
+##Get count of containers:
+URL: `http://localhost:8080/seqdb-ws/v1/container/count`
 
 Should result in something like:
 ```
 {
-    "type": "specimenReplicates",
-    "count": 9992
+    "meta": {
+        "ellapsedMillis": 0,
+        "thisUrl": "http://localhost:8080/",
+        "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
+        "debug": true,
+        "payloadType": "countpayload",
+        "mode": "mock",
+        "timestamp": "Sun Feb 9 06:28:15 EST 2014"
+    },
+    "payload": {
+        "total": 4
+    }
 }
 ```
 
 
-##Get all specimen replicate GET URIs
-URL: `http://localhost:4567/v1/specimenReplicate/`
+##Get all container GET URIs
+URL: `http://localhost:8080/seqdb-ws/v1/container`
 
 This should result in something like:
 
 ```
 {
 
-    "total": 9992,
-    "limit": 100,
-    "offset": 0,
-    "type": "specimenReplicate",
-    "nextPageUrl": "http://localhost:4567/v1/specimenReplicate?offset=100&limit=100",
-    "uris": [
-        "http://localhost:4567/v1/specimenReplicate/941756",
-        "http://localhost:4567/v1/specimenReplicate/922332",
-        "http://localhost:4567/v1/specimenReplicate/287714",
-        "http://localhost:4567/v1/specimenReplicate/131839",
-        "http://localhost:4567/v1/specimenReplicate/710279",
-	"http://localhost:4567/v1/specimenReplicate/555856",
+    "meta": {
+        "ellapsedMillis": 0,
+        "thisUrl": "http://localhost:8080/seqdb-ws/v1/container",
+        "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
+        "debug": false,
+        "payloadType": "pagingpayload",
+        "mode": "mock",
+        "timestamp": "Sun Feb 9 06:28:15 EST 2014"
+    },
+    "payload": {
+        "limit": 100,
+        "baseUrl": "http://localhost:8080/seqdb-ws/v1/container",
+        "offset": 0,
+        "nextPageurl": "http://default_next_url.com",
+        "urls": [
+            {
+                "urlPath": "0"
+            },
+            {
+                "urlPath": "1"
+            },
+            {
+                "urlPath": "2"
+            },
 .
 .
 . [content removed]
 .
 .
-        "http://localhost:4567/v1/specimenReplicate/271727",
-        "http://localhost:4567/v1/specimenReplicate/645653"
-    ]
+            {
+                "urlPath": "40"
+            },
+            {
+                "urlPath": "41"
+            },
+        ],
+        "total": 42
+    }
 
 }
-
 ```
-##Get a single specimen replicate record by primary key
+To construct the full URL for the web service, combine the `payload.baseUrl` with one of the `payload.urls`.
+
+
+##Get a single container record by primary key
 Now, use one of the above to get the full record:
-URL: (http://localhost:4567/v1/specimenReplicate/941756)[http://localhost:4567/v1/specimenReplicate/941756]
+URL: http://localhost:8080/seqdb-ws/v1/container/1
 
 Should result in something like:
 ```
 {
-    "primaryKey": 941756,
-    "name": "mbyfolp",
-    "state": "xmbjptcnkuhv",
-    "specimenIdentifier": 77596,
-    "version": "zsi",
-    "contents": "iliqhjyqorcn",
-    "notes": "qrkhfmyqyemch tltg z",
-    "storageMedium": "minm sg t owioggbbuf",
-    "startDate": "2010-01-05 10:02:12",
-    "revivalDate": "2014-08-01 01:54:12",
-    "dateDestroyed": "2010-07-18 04:46:12",
-    "parent": "http://localhost:4567/v1/specimenReplicate/764673",
-    "location": {
-        "containerNumber": 7,
-        "storageUnit": 1,
-        "compartment": 2,
-        "shelf": 3,
-        "rack": 1,
-        "dateMoved": "2010-05-12 22:26:12",
-        "wellColumn": 1,
-        "wellRow": "f"
+    "meta": {
+        "ellapsedMillis": 0,
+        "thisUrl": "http://localhost:8080/",
+        "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
+        "debug": true,
+        "payloadType": "container",
+        "mode": "mock",
+        "timestamp": "Sun Feb 9 06:28:15 EST 2014"
+    },
+    "payload": {
+        "id": 1,
+        "containerNumber": "43",
+        "containerType": {
+            "name": "t2",
+            "baseType": "t6",
+            "numberOfWells": 10,
+            "numberOfColumns": 8,
+            "numberOfRows": 9,
+            "id": 42
+        },
+        "locations": "http://localhost:8080/seqdb-ws/v1/location/container/1"
     }
+}
+```
+Note above that payload.locations is the full URL to get the locations associated with a container.
+It has the form: location/container/PRIMARY_KEY
+
+Using this URL http://localhost:8080/seqdb-ws/v1/location/container/1 should produce something like:
+```
+{
+
+    "meta": {
+        "ellapsedMillis": 0,
+        "thisUrl": "http://localhost:8080/seqdb-ws/v1/location/container/1",
+        "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
+        "debug": false,
+        "payloadType": "pagingpayload",
+        "mode": "mock",
+        "timestamp": "Sun Feb 9 06:28:15 EST 2014"
+    },
+    "payload": {
+        "limit": 100,
+        "baseUrl": "http://localhost:8080/seqdb-ws/v1/location",
+        "offset": 0,
+        "nextPageurl": "http://default_next_url.com",
+        "urls": [
+            {
+                "urlPath": "41"
+            },
+            {
+                "urlPath": "86"
+            },
+            {
+                "urlPath": "126"
+            },
+.
+.
+. [content removed]
+.
+.
+
+            {
+                "urlPath": "786"
+            },
+            {
+                "urlPath": "801"
+            },
+            {
+                "urlPath": "836"
+            }
+        ],
+        "total": 29
+    }
+
 }
 ```
 
 
+
+Debugging
+====
+The payload.urls by default only contain an urlPath that needs to be combined with the pyload.baseUrl to get the resource service URL.
+There is a debug mode that supports an easier interactive session and prints a `debugFullUrl` that allows easier access.
+This can be turned on in the following ways:
+- Invoke the `meta.debugToggleUrl`  Above:  http://localhost:8080/seqdb-ws/v1/DEBUG
+- Add `?meta__toggleDebug=true` to the base services URL: `http://localhost:8080/seqdb-ws/v1?meta__toggleDebug=true`
+
+Turning on debugging will now cause all service requests that has `urls:` to include `debugFullUrl`s:
+```
+{
+
+    "meta": {
+        "ellapsedMillis": 0,
+        "thisUrl": "http://localhost:8080/seqdb-ws/v1/",
+        "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
+        "debug": true,
+        "payloadType": "pagingpayload",
+        "mode": "mock",
+        "timestamp": "Sun Feb 9 06:28:15 EST 2014"
+    },
+    "payload": {
+        "limit": 100,
+        "baseUrl": "http://localhost:8080/seqdb-ws/v1/",
+        "offset": 0,
+        "nextPageurl": "http://default_next_url.com",
+        "urls": [
+            {
+                "urlPath": "container",
+                "debugFullUrl": "http://localhost:8080/seqdb-ws/v1/container"
+            },
+            {
+                "urlPath": "container/count",
+                "debugFullUrl": "http://localhost:8080/seqdb-ws/v1/container/count"
+            },
+            {
+                "urlPath": "location",
+                "debugFullUrl": "http://localhost:8080/seqdb-ws/v1/location"
+            },
+            {
+                "urlPath": "location/count",
+                "debugFullUrl": "http://localhost:8080/seqdb-ws/v1/location/count"
+            }
+        ],
+        "total": 4
+    }
+
+}
+```

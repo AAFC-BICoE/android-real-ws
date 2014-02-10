@@ -1,9 +1,4 @@
-*.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# emacs
 *~
+TAGS
+target
+

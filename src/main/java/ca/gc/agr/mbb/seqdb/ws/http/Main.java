@@ -10,13 +10,9 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import ca.gc.agr.mbb.seqdb.ws.mockstate.MockState;
 
-/**
- * Main class.
- *
- */
 public class Main {
     // Base URI the Grizzly HTTP server will listen on
-    public static final String BASE_URI = "http://localhost:8080/myapp/";
+    public static final String BASE_URI = "http://localhost:8080/";
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
