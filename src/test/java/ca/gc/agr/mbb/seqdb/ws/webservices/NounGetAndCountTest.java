@@ -1,5 +1,6 @@
 package ca.gc.agr.mbb.seqdb.ws.webservices;
 
+import java.lang.StackTraceElement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -9,8 +10,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.lang.StackTraceElement;
-
 
 import ca.gc.agr.mbb.seqdb.ws.Nouns;
 import ca.gc.agr.mbb.seqdb.ws.http.Main;
@@ -71,25 +70,19 @@ public class NounGetAndCountTest {
     public void testListWebServices() {
 	String path = WSConstants.BASEPATH;
 	System.err.println("path=[" +  path +  "]");
-        String responseMsg = target.path(path).request().get(String.class);
-	System.err.println("response=[" + responseMsg + "]");
+        Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).get();
         //assertEquals(expected, responseMsg);
+	assertEquals(200, response.getStatus());
     }
 
 
 
     @Test
     public void testListNoun() {
-	try{
-	    String path = WSConstants.BASEPATH + noun;
-	    System.err.println("path=[" + path + "]");
-	    String responseMsg = target.path(path).request().accept(MediaType.APPLICATION_JSON).get(String.class);
-	    System.err.println("response=[" + responseMsg + "]");
-	    System.err.println("************* " + responseMsg);
-	    //assertEquals(expected, responseMsg);
-	}catch(Throwable t){
-	    t.printStackTrace();
-	}
+	String path = WSConstants.BASEPATH + noun;
+	System.err.println("path=[" + path + "]");
+	Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).get();
+	assertEquals(200, response.getStatus());
     }
 
 
@@ -97,54 +90,27 @@ public class NounGetAndCountTest {
     public void testNounCount() {
 	String path = WSConstants.BASEPATH + noun + WSConstants.COUNT_PATH;
 	System.err.println("count path=[" + target.path(path).getUri() + "]");
-	String responseMsg = target.path(path).request().get(String.class);
-	System.err.println("response=[" + responseMsg + "]");
-	System.err.println("************* " + responseMsg);
-        //assertEquals(expected, responseMsg);
+	Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).get();
+	assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testNounGetById() {
-	String path = WSConstants.BASEPATH + noun + "/455";
-	try{
-	    System.err.println("path=[" + path + "]");
-	    String responseMsg = target.path(path).request().get(String.class);
-	    System.err.println("response=[" + responseMsg + "]");
-	    System.err.println("************* " + responseMsg);
-	    //assertEquals("{\"name\":\"my-name\",\"age\":43,\"time\":333}", responseMsg);
-	}
-	catch(Throwable t){
-	    System.err.println("********* Error: trying path=" + path);
-	    //throw t;
-	}
+	String path = WSConstants.BASEPATH + noun + "/999999";
+	System.err.println("path=[" + path + "]");
+	Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).get();
+	assertEquals(404, response.getStatus());
     }
 
 
     @Test//(expected=javax.ws.rs.NotAcceptableException.class)
     public void shouldNotSupportMediaTypeXML(){// throws javax.ws.rs.NotAcceptableException {
 	Response response = null;
-	//try{
-	//String path = WSConstants.BASEPATH + noun + WS.COUNT_PATH;
 	String path = WSConstants.BASEPATH;
-	    System.err.println("count path=[" + target.path(path).getUri() + "]");
-	    response = target.path(path).request().accept(MediaType.APPLICATION_XML).get();
-	    //response = target.path(path).request().accept(MediaType.APPLICATION_JSON).get();
-	    /*
-	    }catch(Throwable e){
-	    StackTraceElement[] stack = e.getStackTrace();
-	    String exception = "";
-	    for (StackTraceElement s : stack) {
-		exception = exception + s.toString() + "\n\t\t";
-	    }
-	    System.err.println(exception);
-	    */
-	    System.err.println("+++++++++= " + response.getStatus());
-	    System.err.println("+++++++++= " + response);
-
-	    // This should be 406!!!!!!!
-	    assertEquals(500, response.getStatus());
+	System.err.println("count path=[" + target.path(path).getUri() + "]");
+	response = target.path(path).request().accept(MediaType.APPLICATION_XML).get();
+	// This should be 406!!!!!!!
+	assertEquals(406, response.getStatus());
     }
-
-
 
 }

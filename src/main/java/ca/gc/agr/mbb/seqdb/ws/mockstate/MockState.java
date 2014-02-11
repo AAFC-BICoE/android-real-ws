@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
+
 public class MockState{
-    static int containerRange = 500;
-    static int locationRange = 2000;
+    public static int containerRange = 40;
+    public static int locationRange = 100;
 
     public static int numContainers;
     public static int numLocations;
@@ -19,6 +20,9 @@ public class MockState{
 
     public static Container[] containers; 
     public static Location[] locations; 
+    public static Map<Integer,Container> containerMap; 
+    public static Map<Integer, Location> locationMap; 
+
     static Random random = new Random();
 
     static{
@@ -30,17 +34,36 @@ public class MockState{
 	numLocations = random.nextInt(locationRange);
 	
 	containers = new Container[numContainers];
+	containerMap = new HashMap<Integer, Container>(numContainers);
 	for(int i=0; i<numContainers; i++){
 	    containers[i] = new Container((long)i);
+	    containerMap.put(i, containers[i]);
 	    List<Integer> locationList = new ArrayList<Integer>();
 	    containerLocationsMap.put(i, locationList);
 	}
 	
 	locations = new Location[numLocations];
+	locationMap = new HashMap<Integer, Location>(numLocations);
 	for(int i=0; i<numLocations; i++){
-	    locations[i] = new Location((long)(12000+i));
+	    Location loc = new Location((long)i);
+	    locationMap.put(i, loc);
+	    loc.wellRow = "A";
+	    locations[i] = loc;
 	    int containerId = random.nextInt(numContainers);
-	    locations[i].containerId = (long)containerId;
+	    loc.containerId = (long)containerId;
+	    loc.wellColumn = 1 + random.nextInt(7);
+	    switch (loc.wellColumn){
+	    case 1:
+	    case 2:
+		loc.wellRow = "A";
+		break;
+	    case 3:
+	    case 4:
+		loc.wellRow = "E";
+		break;
+	    default:
+		loc.wellRow = "B";
+	    }
 	    containerLocationsMap.get(containerId).add(i);
 	}
     }

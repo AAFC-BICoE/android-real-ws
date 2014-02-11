@@ -36,11 +36,10 @@ URI: `http://localhost:8080/seqdb-ws/v1/`
         "thisUrl": "http://localhost:8080/seqdb-ws/v1/",
         "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
         "debug": false,
-        "payloadType": "pagingpayload",
         "mode": "mock",
         "timestamp": "Sun Feb 9 06:28:15 EST 2014"
     },
-    "payload": {
+    "pagingpayload": {
         "limit": 100,
         "baseUrl": "http://localhost:8080/seqdb-ws/v1/",
         "offset": 0,
@@ -77,11 +76,10 @@ Should result in something like:
         "thisUrl": "http://localhost:8080/",
         "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
         "debug": true,
-        "payloadType": "countpayload",
         "mode": "mock",
         "timestamp": "Sun Feb 9 06:28:15 EST 2014"
     },
-    "payload": {
+    "countPayload": {
         "total": 4
     }
 }
@@ -101,11 +99,10 @@ This should result in something like:
         "thisUrl": "http://localhost:8080/seqdb-ws/v1/container",
         "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
         "debug": false,
-        "payloadType": "pagingpayload",
         "mode": "mock",
         "timestamp": "Sun Feb 9 06:28:15 EST 2014"
     },
-    "payload": {
+    "pagingPayload": {
         "limit": 100,
         "baseUrl": "http://localhost:8080/seqdb-ws/v1/container",
         "offset": 0,
@@ -156,7 +153,7 @@ Should result in something like:
         "mode": "mock",
         "timestamp": "Sun Feb 9 06:28:15 EST 2014"
     },
-    "payload": {
+    "container": {
         "id": 1,
         "containerNumber": "43",
         "containerType": {
@@ -187,7 +184,7 @@ Using this URI http://localhost:8080/seqdb-ws/v1/location/container/1 should pro
         "mode": "mock",
         "timestamp": "Sun Feb 9 06:28:15 EST 2014"
     },
-    "payload": {
+    "pagingPayload": {
         "limit": 100,
         "baseUrl": "http://localhost:8080/seqdb-ws/v1/location",
         "offset": 0,
@@ -247,7 +244,7 @@ Turning on debugging will now cause all service requests that has `urls:` to inc
         "mode": "mock",
         "timestamp": "Sun Feb 9 06:28:15 EST 2014"
     },
-    "payload": {
+    "pagingPayload": {
         "limit": 100,
         "baseUrl": "http://localhost:8080/seqdb-ws/v1/",
         "offset": 0,

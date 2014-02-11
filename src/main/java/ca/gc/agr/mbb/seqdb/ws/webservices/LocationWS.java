@@ -1,7 +1,6 @@
 package ca.gc.agr.mbb.seqdb.ws.webservices;
 
-
-
+import javax.ws.rs.core.Response;
 import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -47,13 +46,20 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
 	payload.addUrl("aa");
 	payload.addUrl("bb");
 	
-	Envelope envelope = new Envelope(payload, uri.getAbsolutePath().toString());
+	Envelope envelope = new Envelope(uri.getAbsolutePath().toString());
+	envelope.pagingPayload = payload;
 	return toJson(envelope);
     }
 
     @GET @Path(LOCATION+ID_PARAM)
-    public String getLocation(@PathParam(ID) final String id, @Context UriInfo uri) {
-	return toJson(new Envelope(new Location(id), uri.getAbsolutePath().toString()));
+    public Response getLocation(@PathParam(ID) final long id, @Context UriInfo uri) {
+	if(!MockState.locationMap.containsKey((int)id)){
+	    return Response.status(Response.Status.NOT_FOUND).entity("Location not found for ID: " + id).build();
+	}
+	System.err.println("Location by id=" + id + " #locations=" + MockState.locations.length);
+	Envelope envelope = new Envelope(uri.getAbsolutePath().toString());
+	envelope.location = MockState.locations[(int)id];
+	return Response.ok(toJson(envelope)).build();
     }
 
 
@@ -74,9 +80,8 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
 		    payload.addUrl(Long.toString(locationId));
 		}
 	    }
-	    //payload.addUrl("http://www.nrc.ca", "ff");
-	    //payload.addUrl("http://www.canada.ca", "mj");
-	    envelope = new Envelope(payload, uri.getAbsolutePath().toString());
+	    envelope = new Envelope(uri.getAbsolutePath().toString());
+	    envelope.pagingPayload = payload;
 	    }
 	return toJson(envelope);
     }
@@ -84,7 +89,9 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
 
     @GET @Path(LOCATION+COUNT_PATH)
     public String countLocations(@Context final UriInfo uri) {
-	return toJson(new Envelope(new CountPayload(117), uri.getAbsolutePath().toString()));
+	Envelope envelope = new Envelope(uri.getAbsolutePath().toString());
+	envelope.countPayload = new CountPayload(MockState.locations.length);
+	return toJson(envelope);
     }
 
 }

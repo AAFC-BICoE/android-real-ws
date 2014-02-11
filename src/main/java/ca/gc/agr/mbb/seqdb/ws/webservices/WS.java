@@ -65,7 +65,8 @@ public class WS extends BaseWS implements Nouns, WSConstants{
 	//makeBasePayload(paging, uri.getBaseUri());
 	makeBasePayload(paging, uri.getAbsolutePath());
 	//Envelope envelope = new Envelope(paging, uri.getBaseUri().toString());
-	Envelope envelope = new Envelope(paging, uri.getAbsolutePath().toString());
+	Envelope envelope = new Envelope(uri.getAbsolutePath().toString());
+	envelope.setPayload(paging);
 	envelope.getMeta().thisUrl = uri.getAbsolutePath().toString();
 	return toJson(envelope);
     }
@@ -75,7 +76,10 @@ public class WS extends BaseWS implements Nouns, WSConstants{
     @GET @Path(DEBUG_PATH)
     public final String toggleDebug(@Context UriInfo uri) {
 	ALL_DEBUG = !ALL_DEBUG;
-	return toJson(new Envelope(new DebugPayload(ALL_DEBUG), uri.getAbsolutePath().toString()));
+	Envelope envelope = new Envelope(uri.getAbsolutePath().toString());
+	DebugPayload dp = new DebugPayload(ALL_DEBUG); 
+	envelope.debugPayload = dp;
+	return toJson(envelope);
     }
 
     

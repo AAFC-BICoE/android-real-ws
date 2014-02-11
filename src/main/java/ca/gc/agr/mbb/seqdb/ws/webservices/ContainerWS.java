@@ -1,5 +1,6 @@
 package ca.gc.agr.mbb.seqdb.ws.webservices;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -40,21 +41,33 @@ public class ContainerWS  extends BaseWS implements Nouns, WSConstants{
 	}
 	
 	//Envelope envelope = new Envelope(payload, uri.getBaseUri().toString());
-	Envelope envelope = new Envelope(payload, uri.getAbsolutePath().toString());
+	Envelope envelope = new Envelope(uri.getAbsolutePath().toString());
+	envelope.pagingPayload = payload;
 	return toJson(envelope);
     }
 
     @GET @Path(CONTAINER+ID_PARAM)
-    public String getContainer(@PathParam(ID) final String id, @Context UriInfo uri) {
+    public Response getContainer(@PathParam(ID) final int id, @Context UriInfo uri) {
+	if(!MockState.containerMap.containsKey(id)){
+	    return Response.status(Response.Status.NOT_FOUND).entity("Container not found for ID: " + id).build();
+	}
+
 	Container container = new Container(id);
 	container.locations = uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION + "/" + CONTAINER + "/" + id;
-	return toJson(new Envelope(container, uri.getBaseUri().toString()));
+	Envelope envelope = new Envelope(uri.getBaseUri().toString());
+	envelope.container = container;
+
+	return Response.ok(toJson(envelope)).build();
     }
 
  
     @GET @Path(CONTAINER+COUNT_PATH)
     public String countContainers(@Context UriInfo uri) {
-	return toJson(new Envelope(new CountPayload(117), uri.getBaseUri().toString()));
+	CountPayload cp = new CountPayload(117);
+	Envelope envelope = new Envelope(uri.getBaseUri().toString());
+	envelope.countPayload = cp;
+    
+	return toJson(envelope);
     }
 
 }
