@@ -39,7 +39,7 @@ URI: `http://localhost:8080/seqdb-ws/v1/`
         "mode": "mock",
         "timestamp": "Sun Feb 9 06:28:15 EST 2014"
     },
-    "pagingpayload": {
+    "pagingPayload": {
         "limit": 100,
         "baseUrl": "http://localhost:8080/seqdb-ws/v1/",
         "offset": 0,
@@ -180,7 +180,6 @@ Using this URI http://localhost:8080/seqdb-ws/v1/location/container/1 should pro
         "thisUrl": "http://localhost:8080/seqdb-ws/v1/location/container/1",
         "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
         "debug": false,
-        "payloadType": "pagingpayload",
         "mode": "mock",
         "timestamp": "Sun Feb 9 06:28:15 EST 2014"
     },
@@ -240,7 +239,6 @@ Turning on debugging will now cause all service requests that has `urls:` to inc
         "thisUrl": "http://localhost:8080/seqdb-ws/v1/",
         "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
         "debug": true,
-        "payloadType": "pagingpayload",
         "mode": "mock",
         "timestamp": "Sun Feb 9 06:28:15 EST 2014"
     },
