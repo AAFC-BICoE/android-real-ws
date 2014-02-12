@@ -10,8 +10,8 @@ import java.util.HashMap;
 
 
 public class MockState{
-    public static int containerRange = 50;
-    public static int locationRange = 100;
+    public static int containerRange = 60;
+    public static int locationRange = 110;
 
     public static int numContainers;
     public static int numLocations;

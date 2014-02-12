@@ -38,12 +38,14 @@ URI: `http://localhost:8080/seqdb-ws/v1/`
         "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
         "debug": false,
         "mode": "mock",
-        "timestamp": "Sun Feb 9 06:28:15 EST 2014"
+        "timestamp": "Sun Feb 9 06:28:15 EST 2014",
+	status: 200
     },
     "pagingPayload": {
         "limit": 100,
         "baseUrl": "http://localhost:8080/seqdb-ws/v1/",
         "offset": 0,
+	"count": 4,
         "urls": [
             {
                 "urlPath": "container"
@@ -79,6 +81,7 @@ Should result in something like:
         "debug": true,
         "mode": "mock",
         "timestamp": "Sun Feb 9 06:28:15 EST 2014"
+	status": 200
     },
     "countPayload": {
         "total": 4
@@ -102,12 +105,14 @@ This should result in something like:
         "debug": false,
         "mode": "mock",
         "timestamp": "Sun Feb 9 06:28:15 EST 2014"
+	status: 200
     },
     "pagingPayload": {
         "limit": 100,
         "baseUrl": "http://localhost:8080/seqdb-ws/v1/container",
         "offset": 0,
-        "nextPageurl": "http://default_next_url.com",
+	nextPageUrl": "http://localhost:8080/seqdb-ws/v1/container?offset=100&limit=100",
+	"count": 100,
         "urls": [
             {
                 "urlPath": "0"
@@ -150,7 +155,8 @@ Should result in something like:
         "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
         "debug": true,
         "mode": "mock",
-        "timestamp": "Sun Feb 9 06:28:15 EST 2014"
+        "timestamp": "Sun Feb 9 06:28:15 EST 2014",
+	status: 200
     },
     "container": {
         "id": 1,
@@ -180,13 +186,14 @@ Using this URI  `http://localhost:8080/seqdb-ws/v1/location/container/1` should 
         "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
         "debug": false,
         "mode": "mock",
-        "timestamp": "Sun Feb 9 06:28:15 EST 2014"
+        "timestamp": "Sun Feb 9 06:28:15 EST 2014",
+	status: 200
     },
     "pagingPayload": {
         "limit": 100,
         "baseUrl": "http://localhost:8080/seqdb-ws/v1/location",
         "offset": 0,
-        "nextPageurl": "http://default_next_url.com",
+	nextPageUrl": "http://localhost:8080/seqdb-ws/v1/location?offset=10&limit=10",
         "urls": [
             {
                 "urlPath": "41"
@@ -239,13 +246,14 @@ Turning on debugging will now cause all service requests that produce a `pagingP
         "debugToggleUrl": "http://localhost:8080/seqdb-ws/v1/DEBUG",
         "debug": true,
         "mode": "mock",
-        "timestamp": "Sun Feb 9 06:28:15 EST 2014"
+        "timestamp": "Sun Feb 9 06:28:15 EST 2014",
+	status: 200
     },
     "pagingPayload": {
         "limit": 100,
         "baseUrl": "http://localhost:8080/seqdb-ws/v1/",
         "offset": 0,
-        "nextPageurl": "http://default_next_url.com",
+	"count": 4,
         "urls": [
             {
                 "urlPath": "container",
