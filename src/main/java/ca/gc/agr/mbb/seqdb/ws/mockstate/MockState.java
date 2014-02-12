@@ -10,18 +10,18 @@ import java.util.HashMap;
 
 
 public class MockState{
-    public static int containerRange = 40;
+    public static int containerRange = 50;
     public static int locationRange = 100;
 
     public static int numContainers;
     public static int numLocations;
 
-    public static Map<Integer,List<Integer>>containerLocationsMap = new HashMap<Integer, List<Integer>>(containerRange);
+    public static Map<Long,List<Long>>containerLocationsMap = new HashMap<Long, List<Long>>(containerRange);
 
     public static Container[] containers; 
     public static Location[] locations; 
-    public static Map<Integer,Container> containerMap; 
-    public static Map<Integer, Location> locationMap; 
+    public static Map<Long,Container> containerMap; 
+    public static Map<Long, Location> locationMap; 
 
     static Random random = new Random();
 
@@ -29,24 +29,24 @@ public class MockState{
 	init();
     }
 
-    static final void init() {
-	numContainers = random.nextInt(containerRange);
-	numLocations = random.nextInt(locationRange);
+    public static final void init() {
+	numContainers = containerRange;
+	numLocations = locationRange;
 	
 	containers = new Container[numContainers];
-	containerMap = new HashMap<Integer, Container>(numContainers);
+	containerMap = new HashMap<Long, Container>(numContainers);
 	for(int i=0; i<numContainers; i++){
 	    containers[i] = new Container((long)i);
-	    containerMap.put(i, containers[i]);
-	    List<Integer> locationList = new ArrayList<Integer>();
-	    containerLocationsMap.put(i, locationList);
+	    containerMap.put((long)i, containers[i]);
+	    List<Long> locationList = new ArrayList<Long>();
+	    containerLocationsMap.put((long)i, locationList);
 	}
 	
 	locations = new Location[numLocations];
-	locationMap = new HashMap<Integer, Location>(numLocations);
+	locationMap = new HashMap<Long, Location>(numLocations);
 	for(int i=0; i<numLocations; i++){
 	    Location loc = new Location((long)i);
-	    locationMap.put(i, loc);
+	    locationMap.put((long)i, loc);
 	    loc.wellRow = "A";
 	    locations[i] = loc;
 	    int containerId = random.nextInt(numContainers);
@@ -64,9 +64,25 @@ public class MockState{
 	    default:
 		loc.wellRow = "B";
 	    }
-	    containerLocationsMap.get(containerId).add(i);
+	    containerLocationsMap.get((long)containerId).add((long)i);
 	}
     }
 
+    public static final long countLocationsForContainer(long containerId){
+	if(containerLocationsMap != null 
+	   && containerLocationsMap.containsKey(containerId)){
+	    List<Long>locations = containerLocationsMap.get(containerId);
+	    if(locations != null){
+		return locations.size();
+	    }
+	}
+	return 0;
+    }
 
+    public static final long countContainers(){
+	if(containers == null){
+	    return 0l;
+	}
+	return containers.length;
+    }
 }

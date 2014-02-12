@@ -1,7 +1,10 @@
 package ca.gc.agr.mbb.seqdb.ws.webservices;
 
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.ArrayList;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.net.URI;
@@ -53,48 +56,42 @@ public class WS extends BaseWS implements Nouns, WSConstants{
 
     // Base URL: list all possible WS urls
     @GET
-    public final String listResources(@Context UriInfo uri,
+    public final Response listResources(@Context UriInfo uri,
 				      @DefaultValue("false") @QueryParam("meta__toggleDebug") boolean toggleBoolean) {
 	System.err.println("toggleBoolean:" + toggleBoolean);
 	if(toggleBoolean){
 	    ALL_DEBUG = !ALL_DEBUG;
 	}
-	int total = 30;
-	PagingPayload paging = new PagingPayload(total);
-	
-	//makeBasePayload(paging, uri.getBaseUri());
-	makeBasePayload(paging, uri.getAbsolutePath());
-	//Envelope envelope = new Envelope(paging, uri.getBaseUri().toString());
-	Envelope envelope = new Envelope(uri.getAbsolutePath().toString());
-	envelope.setPayload(paging);
+	PagingPayload paging = new PagingPayload(uri.getAbsolutePath().toString(), 0l, 100, makeBasePayload(), false);
+	Envelope envelope = new Envelope(uri, paging);
 	envelope.getMeta().thisUrl = uri.getAbsolutePath().toString();
-	return toJson(envelope);
+	return ok(envelope);
     }
 
 
     // toggle debug
     @GET @Path(DEBUG_PATH)
-    public final String toggleDebug(@Context UriInfo uri) {
+    public final Response toggleDebug(@Context UriInfo uri) {
 	ALL_DEBUG = !ALL_DEBUG;
-	Envelope envelope = new Envelope(uri.getAbsolutePath().toString());
-	DebugPayload dp = new DebugPayload(ALL_DEBUG); 
-	envelope.debugPayload = dp;
-	return toJson(envelope);
+	Envelope envelope = new Envelope(uri, new DebugPayload(ALL_DEBUG)); 
+	return ok(envelope);
     }
 
     
     //////////////////////////////////////////////////////////////////////////////////////
-    static final void makeBasePayload(PagingPayload paging, URI uri){
+    static final String[] makeBasePayload(){
 	// Base nouns
-	paging.baseUrl = uri.toString();
-	for(String noun: WS.NOUNS){
-	    try{
-		paging.addUrl(noun);
-		paging.addUrl(noun + COUNT_PATH);
-	    }catch(Exception e){
-		e.printStackTrace();
-	    }
+	String[] urlFragments = new String[WS.NOUNS.length * 2];
+
+	int j=0;
+	for(int i=0; i<WS.NOUNS.length; i++){
+	    String noun = WS.NOUNS[i];
+	    urlFragments[j] = noun;
+	    ++j;
+	    urlFragments[j] = noun + COUNT_PATH;
+	    ++j;
 	}
+	return urlFragments;
     }
 
 

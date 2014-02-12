@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import ca.gc.agr.mbb.seqdb.ws.webservices.WSConstants;
 import ca.gc.agr.mbb.seqdb.ws.payload.Container;
 import ca.gc.agr.mbb.seqdb.ws.payload.Location;
+import javax.ws.rs.core.UriInfo;
 
 public class Envelope{
     private Meta meta;
@@ -21,9 +22,10 @@ public class Envelope{
 	meta = new Meta();
     }
 
-    public Envelope(final String thisUrl){
+    public Envelope(final UriInfo uriInfo, final Payload payload){
 	this();
-	meta.thisUrl = thisUrl;
+	meta.thisUrl = uriInfo.getAbsolutePath().toString();
+	setPayload(payload);
     }
 
     public Meta getMeta(){

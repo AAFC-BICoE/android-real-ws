@@ -10,4 +10,17 @@ public interface WSConstants{
 
     public static final String DEBUG_PATH = "DEBUG";
 
+    public static final String DEFAULT_PAGING_OFFSET_STRING = "0";
+
+    public static final int DEFAULT_PAGING_LIMIT = 100;
+    public static final String DEFAULT_PAGING_LIMIT_STRING = "100";
+
+    public static final int MAX_PAGING_LIMIT = DEFAULT_PAGING_LIMIT * 5;
+
+    // Parameter names
+    public static final String PAGING_OFFSET_PARAMETER = "offset";
+    public static final String PAGING_LIMIT_PARAMETER = "limit";
+    
+
+
 }

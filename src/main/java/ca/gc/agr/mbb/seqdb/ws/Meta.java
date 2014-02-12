@@ -13,6 +13,8 @@ public class Meta{
     public String payloadType=null;
     public String mode="mock"; // real/mock
     public String timestamp = Calendar.getInstance().getTime().toString();
+    public String errorString;
+    public int status;
 
     public transient Long startMillis = System.currentTimeMillis();
 }

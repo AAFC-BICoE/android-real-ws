@@ -3,7 +3,7 @@ package ca.gc.agr.mbb.seqdb.ws.payload;
 import ca.gc.agr.mbb.seqdb.ws.Payload;
 
 public class Container implements Payload{
-    public long id = 4666l;
+    public Long id = 4666l;
     public String containerNumber = "43";
     public ContainerType containerType;
     
@@ -22,4 +22,7 @@ public class Container implements Payload{
 	containerType = new ContainerType();
     }
 
+    public String toString(){
+	return id.toString();
+    }
 }

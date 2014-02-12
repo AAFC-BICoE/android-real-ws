@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+#
+# shell script to run web servics in grizzly web server, on port 8080
+#   useful for interactive testing
+#
+mvn -DskipTests clean compile assembly:single
+export CLASSPATH=target/ws-1.0-SNAPSHOT-jar-with-dependencies.jar
+java ca.gc.agr.mbb.seqdb.ws.http.Main

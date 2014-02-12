@@ -16,7 +16,6 @@ import ca.gc.agr.mbb.seqdb.ws.http.Main;
 import ca.gc.agr.mbb.seqdb.ws.mockstate.MockState;
 import ca.gc.agr.mbb.seqdb.ws.payload.Container;
 import ca.gc.agr.mbb.seqdb.ws.webservices.WSConstants;
-import ca.gc.agr.mbb.seqdb.ws.webservices.WSConstants;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.junit.After;
 import org.junit.Before;
@@ -35,16 +34,18 @@ public class ContainerGetByIdTest {
 
     public ContainerGetByIdTest(final Long id, final Long expectedId){
 	this.id = id;
-	this.expectedId = expectedId;
+	//this.expectedId = expectedId;
     }
 
 
     @Parameters
     public static Collection<Long[]> data() {
+	MockState.containerRange = 5;
+	MockState.init();
 	List<Long[]> params =
 	    new ArrayList<Long[]>();
 	for(Container container: MockState.containers){
-	    params.add(new Long[] {container.id, container.id});
+	    params.add(new Long[] {container.id, null});
 	}
 	return params;
     }
@@ -78,8 +79,18 @@ public class ContainerGetByIdTest {
     }
 
     @Test
-    public void shouldNotGetContainerByBadId(){
-    	String path = WSConstants.BASEPATH + Nouns.CONTAINER + "/" +  (id+containerRange) + "b";
+    public void shouldFailWithBadId(){
+    	String path = WSConstants.BASEPATH + Nouns.CONTAINER + "/" +  id + "b";
+    	System.err.println("path=[" + path + "]");
+    	Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).get();
+    	assertEquals(404, response.getStatus());
+    }
+
+    @Test
+    public void shouldFailWithOutOfRangeId(){
+	long outOfRangeId = MockState.numContainers+id+5;
+	System.err.println("Out=" + outOfRangeId);
+    	String path = WSConstants.BASEPATH + Nouns.CONTAINER + "/" + outOfRangeId;
     	System.err.println("path=[" + path + "]");
     	Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).get();
     	assertEquals(404, response.getStatus());

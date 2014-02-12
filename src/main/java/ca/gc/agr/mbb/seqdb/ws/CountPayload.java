@@ -1,9 +1,12 @@
 package ca.gc.agr.mbb.seqdb.ws;
 
 public class CountPayload implements Payload{
-    public Integer total = 9999;
+    public long total = 0;
+    public CountPayload(){
+    }
 
-    public CountPayload(final Integer total){
+
+    public CountPayload(final long total){
 	this.total = total;
     }
 }

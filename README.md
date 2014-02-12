@@ -2,6 +2,7 @@
 What
 =====
 - Web service for SeqDB
+- This is the server Web Services for the project https://github.com/mgrah043/sequence_database_barcode_scanner
 
 Build
 ======
@@ -19,7 +20,7 @@ java ca.gc.agr.mbb.seqdb.ws.http.Main
 ```
 Starts web server on port `8080`
 
-**Note: needs java 1.7.x**
+**Note: needs java >= v1.7**
 
 
 URLs to try

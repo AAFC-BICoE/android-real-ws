@@ -5,6 +5,8 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -36,62 +38,68 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
     }
 
     @GET @Path(LOCATION)
-    public String listLocations(@Context final Request request,
-				@Context final UriInfo uri) {
-	System.err.println("getAbsolutePath()=" + uri.getAbsolutePath());
-	System.err.println("getBaseUri()=" + uri.getBaseUri());
-	System.err.println("getPath()=" + uri.getPath());
-	PagingPayload payload = new PagingPayload(42);
-	payload.baseUrl = "http://www.nrc.ca";
-	payload.addUrl("aa");
-	payload.addUrl("bb");
-	
-	Envelope envelope = new Envelope(uri.getAbsolutePath().toString());
-	envelope.pagingPayload = payload;
-	return toJson(envelope);
+
+    public Response listLocations(@Context final Request request,
+				  @Context final UriInfo uri,
+				  @DefaultValue(DEFAULT_PAGING_OFFSET_STRING) @QueryParam(PAGING_OFFSET_PARAMETER) int offset,
+				  @DefaultValue(DEFAULT_PAGING_LIMIT_STRING) @QueryParam(PAGING_LIMIT_PARAMETER) int limit){
+	Envelope envelope = null;
+	try{
+	    limit = limit(limit);
+	    System.err.println("getAbsolutePath()=" + uri.getAbsolutePath());
+	    System.err.println("getBaseUri()=" + uri.getBaseUri());
+	    System.err.println("getPath()=" + uri.getPath());
+ 
+	    Long[] locationIds = MockState.locationMap.keySet().toArray(new Long[0]);
+	    PagingPayload payload = new PagingPayload(uri.getBaseUri().toString()+ BASEPATH + LOCATION,
+						      offset,
+						      limit,
+						      locationIds,
+						      false);
+	    envelope = new Envelope(uri, payload);
+	}catch(Throwable t){
+	    t.printStackTrace();
+	}
+	return ok(envelope);
     }
 
     @GET @Path(LOCATION+ID_PARAM)
     public Response getLocation(@PathParam(ID) final long id, @Context UriInfo uri) {
-	if(!MockState.locationMap.containsKey((int)id)){
-	    return Response.status(Response.Status.NOT_FOUND).entity("Location not found for ID: " + id).build();
+	if(!MockState.locationMap.containsKey(id)){
+	    return notFound(LOCATION, id);
 	}
+	Location location = MockState.locationMap.get(id);
 	System.err.println("Location by id=" + id + " #locations=" + MockState.locations.length);
-	Envelope envelope = new Envelope(uri.getAbsolutePath().toString());
-	envelope.location = MockState.locations[(int)id];
-	return Response.ok(toJson(envelope)).build();
+	Envelope envelope = new Envelope(uri, location);
+	return ok(envelope);
     }
 
 
     // Get all Locations for Container ID
     @GET @Path(LOCATION + "/" + CONTAINER + ID_PARAM)
-    public String getLocationBYContainer(@PathParam(ID) final long id, @Context final UriInfo uri, @Context final Request request) {
+    public Response getLocationBYContainer(@PathParam(ID) final long id, @Context final UriInfo uri, @Context final Request request) {
 	Envelope envelope = null;
 	PagingPayload payload = null;
 	System.err.println("LocationId.getLocationBYContainer: " + id + ":" + MockState.numContainers);
-	if( okId(id, MockState.numContainers)){
-	    if(MockState.containerLocationsMap.containsKey((int)id)){
-		List<Integer> locations = MockState.containerLocationsMap.get((int)id);
-									      
-		payload = new PagingPayload(locations.size());
-		payload.baseUrl = uri.getBaseUri().toString()+ BASEPATH + LOCATION;
-
-		for(Integer locationId: locations){
-		    payload.addUrl(Long.toString(locationId));
-		}
-	    }
-	    envelope = new Envelope(uri.getAbsolutePath().toString());
-	    envelope.pagingPayload = payload;
-	    }
-	return toJson(envelope);
+	if(!MockState.containerLocationsMap.containsKey(id)){
+	    return notFound(LOCATION, id);
+	}
+	List<Long> locations = MockState.containerLocationsMap.get(id);
+	payload = new PagingPayload(uri.getBaseUri().toString()+ BASEPATH + LOCATION, 
+				    0l,
+				    100,
+				    locations.toArray(new Long[0]),
+				    false);
+	return ok(new Envelope(uri, payload));
     }
 
 
     @GET @Path(LOCATION+COUNT_PATH)
-    public String countLocations(@Context final UriInfo uri) {
-	Envelope envelope = new Envelope(uri.getAbsolutePath().toString());
-	envelope.countPayload = new CountPayload(MockState.locations.length);
-	return toJson(envelope);
+    public Response countLocations(@Context final UriInfo uri) {
+	System.err.println("# locations=" + MockState.locations.length);
+	Envelope envelope = new Envelope(uri, new CountPayload(MockState.locations.length));
+	
+	return ok(envelope);
     }
 
 }

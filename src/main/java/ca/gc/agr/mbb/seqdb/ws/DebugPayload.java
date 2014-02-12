@@ -1,7 +1,7 @@
 package ca.gc.agr.mbb.seqdb.ws;
 
 
-public class  DebugPayload{
+public class  DebugPayload implements Payload{
     boolean debug;
     String debugUrl;
 

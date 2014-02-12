@@ -78,7 +78,7 @@ public class NounGetAndCountTest {
 
 
     @Test
-    public void testListNoun() {
+    public void shouldListAllNounItems() {
 	String path = WSConstants.BASEPATH + noun;
 	System.err.println("path=[" + path + "]");
 	Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).get();
@@ -87,7 +87,7 @@ public class NounGetAndCountTest {
 
 
     @Test
-    public void testNounCount() {
+    public void shouldCountNoun() {
 	String path = WSConstants.BASEPATH + noun + WSConstants.COUNT_PATH;
 	System.err.println("count path=[" + target.path(path).getUri() + "]");
 	Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).get();
@@ -95,8 +95,8 @@ public class NounGetAndCountTest {
     }
 
     @Test
-    public void testNounGetById() {
-	String path = WSConstants.BASEPATH + noun + "/999999";
+    public void shouldFailWithBadId() {
+	String path = WSConstants.BASEPATH + noun + "/zzzzzzz9";
 	System.err.println("path=[" + path + "]");
 	Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).get();
 	assertEquals(404, response.getStatus());
