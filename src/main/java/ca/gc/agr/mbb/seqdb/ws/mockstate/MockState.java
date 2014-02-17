@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 
 public class MockState{
+    
     public static int containerRange = 60;
     public static int locationRange = 110;
 
@@ -18,8 +19,8 @@ public class MockState{
 
     public static Map<Long,List<Long>>containerLocationsMap = new HashMap<Long, List<Long>>(containerRange);
 
-    public static Container[] containers; 
-    public static Location[] locations; 
+    public static List<Container> containers; 
+    public static List<Location> locations; 
     public static Map<Long,Container> containerMap; 
     public static Map<Long, Location> locationMap; 
 
@@ -33,38 +34,16 @@ public class MockState{
 	numContainers = containerRange;
 	numLocations = locationRange;
 	
-	containers = new Container[numContainers];
+	containers = new ArrayList<Container>(numContainers);
 	containerMap = new HashMap<Long, Container>(numContainers);
 	for(int i=0; i<numContainers; i++){
-	    containers[i] = new Container((long)i);
-	    containerMap.put((long)i, containers[i]);
-	    List<Long> locationList = new ArrayList<Long>();
-	    containerLocationsMap.put((long)i, locationList);
+	    addNewContainer(i);
 	}
 	
-	locations = new Location[numLocations];
+	locations = new ArrayList<Location>(numLocations);
 	locationMap = new HashMap<Long, Location>(numLocations);
 	for(int i=0; i<numLocations; i++){
-	    Location loc = new Location((long)i);
-	    locationMap.put((long)i, loc);
-	    loc.wellRow = "A";
-	    locations[i] = loc;
-	    int containerId = random.nextInt(numContainers);
-	    loc.containerId = (long)containerId;
-	    loc.wellColumn = 1 + random.nextInt(7);
-	    switch (loc.wellColumn){
-	    case 1:
-	    case 2:
-		loc.wellRow = "A";
-		break;
-	    case 3:
-	    case 4:
-		loc.wellRow = "E";
-		break;
-	    default:
-		loc.wellRow = "B";
-	    }
-	    containerLocationsMap.get((long)containerId).add((long)i);
+	    addNewLocation(i);
 	}
     }
 
@@ -83,6 +62,37 @@ public class MockState{
 	if(containers == null){
 	    return 0l;
 	}
-	return containers.length;
+	return containers.size();
+    }
+
+    public static final void addNewContainer(int i){
+	Container newContainer = new Container((long)i);
+	containers.add(newContainer);
+	    containerMap.put((long)i, newContainer);
+	    List<Long> locationList = new ArrayList<Long>();
+	    containerLocationsMap.put((long)i, locationList);
+    }
+
+    public static final void addNewLocation(int i){
+	Location loc = new Location((long)i);
+	    locationMap.put((long)i, loc);
+	    loc.wellRow = "A";
+	    locations.add(loc);
+	    int containerId = random.nextInt(numContainers);
+	    loc.containerId = (long)containerId;
+	    loc.wellColumn = 1 + random.nextInt(7);
+	    switch (loc.wellColumn){
+	    case 1:
+	    case 2:
+		loc.wellRow = "A";
+		break;
+	    case 3:
+	    case 4:
+		loc.wellRow = "E";
+		break;
+	    default:
+		loc.wellRow = "B";
+	    }
+	    containerLocationsMap.get((long)containerId).add((long)i);	
     }
 }

@@ -5,16 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import ca.gc.agr.mbb.seqdb.ws.Nouns;
-import ca.gc.agr.mbb.seqdb.ws.http.Main;
 import ca.gc.agr.mbb.seqdb.ws.webservices.WSConstants;
-import org.glassfish.grizzly.http.server.HttpServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +21,7 @@ import org.junit.runners.Parameterized.Parameters;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class) 
-public class NounGetAndCountTest {
+public class NounGetAndCountTest extends BaseTest{
     
     private String noun = null;
     private String expected = null;
@@ -48,21 +44,15 @@ public class NounGetAndCountTest {
     }
 
     
-    private HttpServer server;
-    private WebTarget target;
 
     @Before
     public void setUp() throws Exception {
-        // start the server
-        server = Main.startServer();
-        // create the client
-        Client c = ClientBuilder.newClient();
-        target = c.target(Main.BASE_URI);
+	super.setUp();
     }
 
     @After
     public void tearDown() throws Exception {
-        server.stop();
+	super.tearDown();
     }
     
 

@@ -3,6 +3,7 @@ package ca.gc.agr.mbb.seqdb.ws.webservices;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import javax.ws.rs.GET;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.DefaultValue;
@@ -69,7 +70,7 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
 	    return notFound(LOCATION, id);
 	}
 	Location location = MockState.locationMap.get(id);
-	System.err.println("Location by id=" + id + " #locations=" + MockState.locations.length);
+	System.err.println("Location by id=" + id + " #locations=" + MockState.locations.size());
 	Envelope envelope = new Envelope(uri, location);
 	return ok(envelope);
     }
@@ -96,10 +97,21 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
 
     @GET @Path(LOCATION+COUNT_PATH)
     public Response countLocations(@Context final UriInfo uri) {
-	System.err.println("# locations=" + MockState.locations.length);
-	Envelope envelope = new Envelope(uri, new CountPayload(MockState.locations.length));
+	System.err.println("# locations=" + MockState.locations.size());
+	Envelope envelope = new Envelope(uri, new CountPayload(MockState.locations.size()));
 	
 	return ok(envelope);
+    }
+
+    /////////////// DELETE
+    @DELETE @Path(LOCATION+ID_PARAM)
+    public Response deleteLocation(@PathParam(ID) final long id, @Context UriInfo uri) {
+	if(!MockState.locationMap.containsKey(id)){
+	    return Response.status(Response.Status.NOT_FOUND).entity("Location not found for ID: " + id).build();
+	}
+
+	MockState.locationMap.remove(id);
+	return Response.status(Response.Status.NO_CONTENT).build();
     }
 
 }
