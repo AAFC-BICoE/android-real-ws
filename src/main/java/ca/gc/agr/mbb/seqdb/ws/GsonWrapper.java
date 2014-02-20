@@ -15,4 +15,8 @@ public class GsonWrapper {
 	e.getMeta().ellapsedMillis = System.currentTimeMillis() - e.getMeta().startMillis;
 	return gson.toJson(e);
     }
+
+    public Object fromJson(String s, Class toClass){
+	return gson.fromJson(s, toClass);
+    }
 }

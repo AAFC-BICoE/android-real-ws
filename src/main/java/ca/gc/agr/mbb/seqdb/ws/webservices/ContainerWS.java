@@ -87,14 +87,26 @@ public class ContainerWS  extends BaseWS implements Nouns, WSConstants{
     /////////////// PUT (create)
     @PUT @Path(CONTAINER)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createContainer(@Context UriInfo uri) {
+    public Response createContainer(String json, @Context UriInfo uri) {
+	System.err.println("Container put json=[" + json + "]");
+	Container container = null;
+	try{
+	    container = (Container)fromJson(json, Container.class);
+	}catch(Throwable t){
+	    t.printStackTrace();
+	}
+
+	System.err.println("Container: " + container);
 	int newId = MockState.containers.size() +1;
 	MockState.addNewContainer(newId);
 	URI contentLocationURI = null;
 	try{
-	    contentLocationURI = new URI("foo" + newId);
+	    contentLocationURI = new URI(uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION + "/" + CONTAINER + "/" + newId);
 	}catch(URISyntaxException e){
 	    e.printStackTrace();
+	    return Response.status(Response.Status.INTERNAL_SERVER_ERROR ).build();
+	}catch(Throwable t){
+	    t.printStackTrace();
 	    return Response.status(Response.Status.INTERNAL_SERVER_ERROR ).build();
 	}
  	return Response.status(Response.Status.CREATED).contentLocation(contentLocationURI).build();

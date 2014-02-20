@@ -5,11 +5,15 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
+import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.DefaultValue;
+import java.net.URI;
+import java.net.URISyntaxException;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
@@ -113,5 +117,34 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
 	MockState.locationMap.remove(id);
 	return Response.status(Response.Status.NO_CONTENT).build();
     }
+
+    /////////////// PUT (create)
+    @PUT @Path(LOCATION)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createLocation(String json, @Context UriInfo uri) {
+	System.err.println("Location put json=[" + json + "]");
+	Location location = null;
+	try{
+	    location = (Location)fromJson(json, Location.class);
+	}catch(Throwable t){
+	    t.printStackTrace();
+	}
+
+	System.err.println("Location: " + location);
+	int newId = MockState.locations.size() +1;
+	MockState.addNewLocation(newId);
+	URI contentLocationURI = null;
+	try{
+	    contentLocationURI = new URI(uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION + "/" + LOCATION + "/" + newId);
+	}catch(URISyntaxException e){
+	    e.printStackTrace();
+	    return Response.status(Response.Status.INTERNAL_SERVER_ERROR ).build();
+	}catch(Throwable t){
+	    t.printStackTrace();
+	    return Response.status(Response.Status.INTERNAL_SERVER_ERROR ).build();
+	}
+ 	return Response.status(Response.Status.CREATED).contentLocation(contentLocationURI).build();
+    }
+
 
 }

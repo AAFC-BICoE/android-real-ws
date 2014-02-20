@@ -22,11 +22,16 @@ public class BaseWS implements WSConstants{
 
     }
 
+
     public String toJson(final Envelope envelope){
 	if(envelope == null){
 	    return null;
 	}
 	return gsonWrapper.toJson(envelope);
+    }
+
+    public Object fromJson(String s, Class toClass){
+	return gsonWrapper.fromJson(s, toClass);
     }
 
     public Response notFound(String noun, long id){
