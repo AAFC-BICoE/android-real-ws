@@ -11,7 +11,7 @@ Build
 mvn -DskipTests clean compile assembly:single
 ```
 
-Run
+Run Mock
 ====
 
 ```
@@ -22,6 +22,11 @@ Starts web server on port `8080`
 
 **Note: needs java >= v1.7**
 
+Mock Object Numbers
+========
+- 60 `Container`s, id 0-59
+- 110 `Locations`, id 0-109
+- the 110 `Location`s are randomly assigned to the `Container`s. It is possible a `Container` does not have a `Location`.
 
 URLs to try
 ============
