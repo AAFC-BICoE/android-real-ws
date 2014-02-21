@@ -1,5 +1,6 @@
 package ca.gc.agr.mbb.seqdb.ws.webservices;
 
+import java.util.logging.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import javax.ws.rs.GET;
@@ -18,6 +19,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import ca.gc.agr.mbb.seqdb.ws.Util;
+
 
 import ca.gc.agr.mbb.seqdb.ws.BaseWS;
 import ca.gc.agr.mbb.seqdb.ws.CountPayload;
@@ -121,30 +125,25 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
     /////////////// PUT (create)
     @PUT @Path(LOCATION)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createLocation(String json, @Context UriInfo uri) {
-	System.err.println("Location put json=[" + json + "]");
-	Location location = null;
+    public Response createLocation(String json, @Context UriInfo uri) throws Throwable {
 	try{
+	    Location location = null;
 	    location = (Location)fromJson(json, Location.class);
-	}catch(Throwable t){
-	    t.printStackTrace();
-	}
+	
+	    int newId = MockState.locations.size() +1;
+	    location.id = new Long(newId);
+	    MockState.addNewLocation(newId);
+	    logger.log(Level.INFO, location.toString());
 
-	System.err.println("Location: " + location);
-	int newId = MockState.locations.size() +1;
-	MockState.addNewLocation(newId);
-	URI contentLocationURI = null;
-	try{
-	    contentLocationURI = new URI(uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION + "/" + LOCATION + "/" + newId);
-	}catch(URISyntaxException e){
-	    e.printStackTrace();
-	    return Response.status(Response.Status.INTERNAL_SERVER_ERROR ).build();
-	}catch(Throwable t){
-	    t.printStackTrace();
-	    return Response.status(Response.Status.INTERNAL_SERVER_ERROR ).build();
+	    URI contentLocationURI = null;
+	    contentLocationURI = new URI(uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION 
+					 + "/" + LOCATION + "/" + newId);
+	    logger.log(Level.INFO, "PUT Location: all OK");
+	    return Response.status(Response.Status.CREATED).contentLocation(contentLocationURI).build();
 	}
- 	return Response.status(Response.Status.CREATED).contentLocation(contentLocationURI).build();
-    }
-
+	catch(Throwable t){
+	    return fatal(t);
+	}
+    }    
 
 }

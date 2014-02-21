@@ -13,10 +13,10 @@ public class MyExceptionMapper implements ExceptionMapper<WebApplicationExceptio
     @Override
     public Response toResponse(WebApplicationException ex) {
 	System.err.println(Exceptions.getStackTraceAsString(ex));
-	if(System.getProperties().containsKey("DEBUG")){
-	    //ex.printStackTrace();
-	    //return Response.status(500).entity(Exceptions.getStackTraceAsString(ex)).type("text/plain").build();
-	}
+	ex.printStackTrace();
+	//if(System.getProperties().containsKey("DEBUG")){
+	//return Response.status(500).entity(Exceptions.getStackTraceAsString(ex)).type("text/plain").build();
+	    //}
 	return ex.getResponse();
     }
 

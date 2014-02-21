@@ -2,8 +2,9 @@ package ca.gc.agr.mbb.seqdb.ws.payload;
 
 import ca.gc.agr.mbb.seqdb.ws.Payload;
 
-public class Container implements Payload{
-    public Long id = -1l;
+//public class Container implements Payload{
+public class Container extends BasePayload{
+
     public String containerNumber = "43";
     public ContainerType containerType;
     

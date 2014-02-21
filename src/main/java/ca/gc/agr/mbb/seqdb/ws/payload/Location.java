@@ -2,8 +2,9 @@ package ca.gc.agr.mbb.seqdb.ws.payload;
 
 import ca.gc.agr.mbb.seqdb.ws.Payload;
 
-public class Location  implements Payload{
-    public Long id;
+public class Location extends BasePayload{
+    //public class Location  implements Payload{
+
     public Integer wellColumn;
     public String wellRow;
     public long containerId;

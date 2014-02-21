@@ -74,7 +74,8 @@ public class MockState{
     }
 
     public static final void addNewLocation(int i){
-	Location loc = new Location((long)i);
+	try{
+	    Location loc = new Location((long)i);
 	    locationMap.put((long)i, loc);
 	    loc.wellRow = "A";
 	    locations.add(loc);
@@ -94,5 +95,9 @@ public class MockState{
 		loc.wellRow = "B";
 	    }
 	    containerLocationsMap.get((long)containerId).add((long)i);	
+	}
+	catch(Throwable t){
+	    t.printStackTrace();
+	}
     }
 }

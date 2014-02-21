@@ -5,4 +5,4 @@
 #
 mvn -DskipTests clean compile assembly:single
 export CLASSPATH=target/ws-1.0-SNAPSHOT-jar-with-dependencies.jar
-java ca.gc.agr.mbb.seqdb.ws.http.Main
+java -Djava.util.logging.config.file=src/test/logging.properties ca.gc.agr.mbb.seqdb.ws.http.Main

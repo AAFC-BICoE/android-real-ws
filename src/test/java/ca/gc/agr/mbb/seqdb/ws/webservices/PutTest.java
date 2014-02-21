@@ -1,16 +1,21 @@
 package ca.gc.agr.mbb.seqdb.ws.webservices;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.glassfish.jersey.client.ClientResponse;
 
 import ca.gc.agr.mbb.seqdb.ws.Nouns;
+import ca.gc.agr.mbb.seqdb.ws.Nouns;
+import ca.gc.agr.mbb.seqdb.ws.Payload;
+import ca.gc.agr.mbb.seqdb.ws.payload.Container;
+import ca.gc.agr.mbb.seqdb.ws.payload.Location;
+import org.glassfish.jersey.client.ClientResponse;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
-import javax.ws.rs.client.Entity;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PutTest extends BaseTest{
     
@@ -25,33 +30,41 @@ public class PutTest extends BaseTest{
     }
 
 
+    ////////////////////////////////////////////////
+    // CONTAINER
     @Test
     public void shouldCreateNewContainer(){
-	String path = WSConstants.BASEPATH + Nouns.CONTAINER;
-	System.err.println("path=[" + path + "]");
-
-	String containerJson = "{\"container\": {\"containerNumber\": \"43\",    \"containerType\": {        \"name\": \"t2\",        \"baseType\": \"t6\",        \"numberOfColumns\": 8,        \"numberOfRows\": 9,        \"numberOfWells\": 72,        \"id\": 42    }}}";
-
-	Entity entity = Entity.entity(containerJson, MediaType.APPLICATION_JSON);
-	Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).put(entity);
-	System.err.println("Client response location: " + response.getLocation());
-	System.err.println("Headers: " + response.getHeaders());
+	Response response = putPayload(Nouns.CONTAINER);
 	assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
     }
 
     @Test
+    public void shouldPutNewContainerContentLocationInHeader(){
+	Response response = putPayload(Nouns.CONTAINER);
+	assertTrue(response.getHeaders().containsKey(WSConstants.CONTENT_LOCATION));
+    }
+
+
+    ////////////////////////////////////////////////
+    // LOCATION
+    @Test
     public void shouldCreateNewLocation(){
-	String path = WSConstants.BASEPATH + Nouns.LOCATION;
-	System.err.println("path=[" + path + "]");
-
-	String locationJson = "\"location\": {    \"id\": 1,    \"wellColumn\": 2,    \"wellRow\": \"A\",    \"containerId\": 52}";
-
-	Entity entity = Entity.entity(locationJson, MediaType.APPLICATION_JSON);
-	Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).put(entity);
-	System.err.println("Client response location: " + response.getLocation());
-	System.err.println("Headers: " + response.getHeaders());
+	Response response = putPayload(Nouns.LOCATION);
 	assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
     }
+
+    @Test
+    public void shouldPutNewLocationContentLocationInHeader(){
+	Response response = putPayload(Nouns.LOCATION);
+	assertTrue(response.getHeaders().containsKey(WSConstants.CONTENT_LOCATION));
+    }
+
+    @Test
+    public void putShouldFailIfIdIsSet(){
+	Response response = putPayload(Nouns.LOCATION, true);
+	assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+    }
+
 
 
 }

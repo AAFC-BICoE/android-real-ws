@@ -7,6 +7,7 @@ public interface WSConstants{
     public static final String COUNT_PATH="/count";
     public static final String ID="id";
     public static final String ID_PARAM="/{" + ID + ": \\d+}";
+    //public static final String ID_PARAM="/" + ID;
 
     public static final String DEBUG_PATH = "DEBUG";
 
@@ -21,6 +22,7 @@ public interface WSConstants{
     public static final String PAGING_OFFSET_PARAMETER = "offset";
     public static final String PAGING_LIMIT_PARAMETER = "limit";
     
-
+    // http headers
+    public static String CONTENT_LOCATION = "Content-Location";
 
 }

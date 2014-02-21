@@ -37,6 +37,7 @@ public class ContainerWS  extends BaseWS implements Nouns, WSConstants{
     {
 	super();
     }
+
     /////////////// GET
     @GET @Path(CONTAINER)
     public Response listContainers(@Context UriInfo uri) {
@@ -51,24 +52,30 @@ public class ContainerWS  extends BaseWS implements Nouns, WSConstants{
 
     @GET @Path(CONTAINER+ID_PARAM)
     public Response getContainer(@PathParam(ID) final long id, @Context UriInfo uri) {
-	if(!MockState.containerMap.containsKey(id)){
-	    return notFound(CONTAINER, id);
+	int i=1;
+	try{
+	    System.err.println("getting: " + id);
+	    if(!MockState.containerMap.containsKey(id)){
+		System.err.println("Not able to find id=" + id);
+		return notFound(CONTAINER, id);
+	    }
+	    Container container = MockState.containerMap.get(id);
+	    if(MockState.countLocationsForContainer(id) > 0){
+		container.locations = uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION + "/" + CONTAINER + "/" + id;
+	    }
+	    Envelope envelope = new Envelope(uri, container);
+	    return ok(envelope);
+	}catch(Throwable t){
+	    t.printStackTrace();
+	    return fatal(t);
 	}
-	Container container = MockState.containerMap.get(id);
-	if(MockState.countLocationsForContainer(id) > 0){
-	    container.locations = uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION + "/" + CONTAINER + "/" + id;
-	}
-	Envelope envelope = new Envelope(uri, container);
-	return ok(envelope);
     }
 
  
     @GET @Path(CONTAINER+COUNT_PATH)
     public Response countContainers(@Context UriInfo uri) {
-
 	CountPayload countPayload = new CountPayload(MockState.countContainers());
 	Envelope envelope = new Envelope(uri, countPayload);
-    
 	return ok(envelope);
     }
 
@@ -88,28 +95,21 @@ public class ContainerWS  extends BaseWS implements Nouns, WSConstants{
     @PUT @Path(CONTAINER)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createContainer(String json, @Context UriInfo uri) {
-	System.err.println("Container put json=[" + json + "]");
-	Container container = null;
 	try{
+	    System.err.println("Container put json=[" + json + "]");
+	    Container container = null;
 	    container = (Container)fromJson(json, Container.class);
-	}catch(Throwable t){
-	    t.printStackTrace();
-	}
-
-	System.err.println("Container: " + container);
-	int newId = MockState.containers.size() +1;
-	MockState.addNewContainer(newId);
-	URI contentLocationURI = null;
-	try{
+	    
+	    int newId = MockState.containers.size() +1;
+	    MockState.addNewContainer(newId);
+	    container.id = new Long(newId);
+	    System.err.println("Container: " + container);
+	    URI contentLocationURI = null;
 	    contentLocationURI = new URI(uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION + "/" + CONTAINER + "/" + newId);
-	}catch(URISyntaxException e){
-	    e.printStackTrace();
-	    return Response.status(Response.Status.INTERNAL_SERVER_ERROR ).build();
+	    return Response.status(Response.Status.CREATED).contentLocation(contentLocationURI).build();
 	}catch(Throwable t){
-	    t.printStackTrace();
-	    return Response.status(Response.Status.INTERNAL_SERVER_ERROR ).build();
+	    return fatal(t);
 	}
- 	return Response.status(Response.Status.CREATED).contentLocation(contentLocationURI).build();
     }
 
 }
