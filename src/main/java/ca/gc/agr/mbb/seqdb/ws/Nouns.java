@@ -13,6 +13,6 @@ public interface Nouns{
 
 
     //public static final String[] NOUNS = {CONTAINER,LOCATION, MIXED_SPECIMEN, PCR_PRIMER, SAMPLE, SPECIMEN_REPLICATE, STORAGE};
-    public static final String[] NOUNS = {CONTAINER, LOCATION};
+    public static final String[] NOUNS = {CONTAINER, LOCATION, MIXED_SPECIMEN};
 
 }

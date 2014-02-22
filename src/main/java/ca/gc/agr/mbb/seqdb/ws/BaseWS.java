@@ -64,7 +64,7 @@ public class BaseWS implements WSConstants{
 
     
 
-    public int limit(int v){
+    public int limitMax(int v){
 	if(v < MAX_PAGING_LIMIT){
 	    return v;
 	}else{

@@ -12,6 +12,7 @@ import ca.gc.agr.mbb.seqdb.ws.Nouns;
 import ca.gc.agr.mbb.seqdb.ws.http.Main;
 import ca.gc.agr.mbb.seqdb.ws.Payload;
 import ca.gc.agr.mbb.seqdb.ws.payload.Container;
+import ca.gc.agr.mbb.seqdb.ws.payload.MixedSpecimen;
 import ca.gc.agr.mbb.seqdb.ws.payload.BasePayload;
 import ca.gc.agr.mbb.seqdb.ws.payload.Location;
 import com.google.gson.Gson;
@@ -62,6 +63,9 @@ abstract public class BaseTest{
 	    break;
 	case Nouns.LOCATION:
 	    p = new Location();
+	    break;
+	case Nouns.MIXED_SPECIMEN:
+	    p = new MixedSpecimen();
 	    break;
 	}
 

@@ -16,8 +16,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Request;import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import ca.gc.agr.mbb.seqdb.ws.Util;
@@ -47,14 +46,13 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
     }
 
     @GET @Path(LOCATION)
-
     public Response listLocations(@Context final Request request,
 				  @Context final UriInfo uri,
 				  @DefaultValue(DEFAULT_PAGING_OFFSET_STRING) @QueryParam(PAGING_OFFSET_PARAMETER) int offset,
 				  @DefaultValue(DEFAULT_PAGING_LIMIT_STRING) @QueryParam(PAGING_LIMIT_PARAMETER) int limit){
 	Envelope envelope = null;
 	try{
-	    limit = limit(limit);
+	    limit = limitMax(limit);
 	    System.err.println("getAbsolutePath()=" + uri.getAbsolutePath());
 	    System.err.println("getBaseUri()=" + uri.getBaseUri());
 	    System.err.println("getPath()=" + uri.getPath());

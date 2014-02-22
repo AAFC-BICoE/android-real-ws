@@ -2,17 +2,21 @@ package ca.gc.agr.mbb.seqdb.ws.mockstate;
 
 import ca.gc.agr.mbb.seqdb.ws.payload.Location;
 import ca.gc.agr.mbb.seqdb.ws.payload.Container;
+import ca.gc.agr.mbb.seqdb.ws.payload.MixedSpecimen;
 import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.UUID;
+
 
 
 public class MockState{
     
     public static int containerRange = 60;
     public static int locationRange = 110;
+
 
     public static int numContainers;
     public static int numLocations;
@@ -21,8 +25,11 @@ public class MockState{
 
     public static List<Container> containers; 
     public static List<Location> locations; 
+    public static List<MixedSpecimen> mixedSpecimens; 
+
     public static Map<Long,Container> containerMap; 
     public static Map<Long, Location> locationMap; 
+    public static Map<Long, MixedSpecimen> mixedSpecimenMap; 
 
     static Random random = new Random();
 
@@ -33,6 +40,9 @@ public class MockState{
     public static final void init() {
 	numContainers = containerRange;
 	numLocations = locationRange;
+
+	mixedSpecimens = new ArrayList<MixedSpecimen>(numLocations); 
+	mixedSpecimenMap = new HashMap<Long, MixedSpecimen>(); 
 	
 	containers = new ArrayList<Container>(numContainers);
 	containerMap = new HashMap<Long, Container>(numContainers);
@@ -65,6 +75,13 @@ public class MockState{
 	return containers.size();
     }
 
+    public static final long countMixedSpecimens(){
+	if(mixedSpecimens == null){
+	    return 0l;
+	}
+	return mixedSpecimens.size();
+    }
+
     public static final void addNewContainer(int i){
 	Container newContainer = new Container((long)i);
 	containers.add(newContainer);
@@ -76,6 +93,10 @@ public class MockState{
     public static final void addNewLocation(int i){
 	try{
 	    Location loc = new Location((long)i);
+	    loc.mixedSpecimen = makeMixedSpecimen();
+	    addNewMixedSpecimen(i);
+	    loc.mixedSpecimen.id = (long)i;
+
 	    locationMap.put((long)i, loc);
 	    loc.wellRow = "A";
 	    locations.add(loc);
@@ -99,5 +120,21 @@ public class MockState{
 	catch(Throwable t){
 	    t.printStackTrace();
 	}
+    }
+
+    public static final void addNewMixedSpecimen(int i){
+	MixedSpecimen ms = makeMixedSpecimen();
+	mixedSpecimenMap.put((long)i, ms);
+	mixedSpecimens.add(ms);
+    }
+
+    public static MixedSpecimen makeMixedSpecimen(){
+	MixedSpecimen m = new MixedSpecimen();
+	
+	m.fungiIsolated = TextContent.randomFungus();
+	m.notes = TextContent.randomText();
+	m.treatment = TextContent.randomText();
+	m.project = UUID.randomUUID().toString().substring(0,6);
+	return m;
     }
 }

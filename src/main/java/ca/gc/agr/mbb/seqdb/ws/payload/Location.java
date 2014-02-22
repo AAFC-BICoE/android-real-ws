@@ -9,12 +9,15 @@ public class Location extends BasePayload{
     public String wellRow;
     public long containerId;
 
+    public MixedSpecimen mixedSpecimen;
+
     public Location(String id){
 	this(Long.parseLong(id));
     }
 
     public Location(final long id){
 	this.id = id;
+
     }
 
     public Location(){

@@ -95,18 +95,6 @@ public class WS extends BaseWS implements Nouns, WSConstants{
     }
 
 
-    //=============================================
-    @GET @Path(MIXED_SPECIMEN)
-    public WS listMixedSpecimens() {
-	return new WS();
-    }
-
-    @GET @Path(MIXED_SPECIMEN+COUNT_PATH)
-    public WS countMixedSpecimens() {
-	return new WS();
-    }
-	
-
 
     //=============================================
     @GET @Path(PCR_PRIMER)

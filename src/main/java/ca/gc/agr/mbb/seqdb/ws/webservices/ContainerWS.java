@@ -17,6 +17,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import ca.gc.agr.mbb.seqdb.ws.BaseWS;
+import ca.gc.agr.mbb.seqdb.ws.Util;
 import ca.gc.agr.mbb.seqdb.ws.CountPayload;
 import ca.gc.agr.mbb.seqdb.ws.Envelope;
 import ca.gc.agr.mbb.seqdb.ws.Nouns;
@@ -66,6 +67,8 @@ public class ContainerWS  extends BaseWS implements Nouns, WSConstants{
 	    Envelope envelope = new Envelope(uri, container);
 	    return ok(envelope);
 	}catch(Throwable t){
+	    System.err.println(CONTAINER + " GET by ID problem");
+	    System.err.println(Util.exceptionString(t));
 	    t.printStackTrace();
 	    return fatal(t);
 	}

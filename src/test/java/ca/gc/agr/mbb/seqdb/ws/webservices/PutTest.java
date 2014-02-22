@@ -44,6 +44,12 @@ public class PutTest extends BaseTest{
 	assertTrue(response.getHeaders().containsKey(WSConstants.CONTENT_LOCATION));
     }
 
+    @Test
+    public void putContainerShouldFailIfIdIsSet(){
+	Response response = putPayload(Nouns.CONTAINER, true);
+	assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+    }
+
 
     ////////////////////////////////////////////////
     // LOCATION
@@ -60,8 +66,30 @@ public class PutTest extends BaseTest{
     }
 
     @Test
-    public void putShouldFailIfIdIsSet(){
+    public void putLocationShouldFailIfIdIsSet(){
 	Response response = putPayload(Nouns.LOCATION, true);
+	assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+    }
+
+
+
+    ////////////////////////////////////////////////
+    // MIXED_SPECIMEN
+    @Test
+    public void shouldCreateNewMixedSpecimen(){
+	Response response = putPayload(Nouns.MIXED_SPECIMEN);
+	assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void shouldPutNewMixedSpecimenContentLocationInHeader(){
+	Response response = putPayload(Nouns.MIXED_SPECIMEN);
+	assertTrue(response.getHeaders().containsKey(WSConstants.CONTENT_LOCATION));
+    }
+
+    @Test
+    public void putMixedSpecimenShouldFailIfIdIsSet(){
+	Response response = putPayload(Nouns.MIXED_SPECIMEN, true);
 	assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
     }
 
