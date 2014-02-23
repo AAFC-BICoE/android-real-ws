@@ -34,62 +34,62 @@ public class PutTest extends BaseTest{
     // CONTAINER
     @Test
     public void shouldCreateNewContainer(){
-	Response response = putPayload(Nouns.CONTAINER);
+	Response response = sendPayload(Nouns.CONTAINER, false, METHOD.POST);
 	assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
     }
 
     @Test
     public void shouldPutNewContainerContentLocationInHeader(){
-	Response response = putPayload(Nouns.CONTAINER);
-	assertTrue(response.getHeaders().containsKey(WSConstants.CONTENT_LOCATION));
+	Response response = sendPayload(Nouns.CONTAINER, false, METHOD.POST);
+	assertTrue(response.getHeaders().containsKey(CONTENT_LOCATION));
     }
 
     @Test
     public void putContainerShouldFailIfIdIsSet(){
-	Response response = putPayload(Nouns.CONTAINER, true);
+	Response response = sendPayload(Nouns.CONTAINER, true, METHOD.POST);
 	assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
     }
 
 
     ////////////////////////////////////////////////
     // LOCATION
+    //  PUT
     @Test
     public void shouldCreateNewLocation(){
-	Response response = putPayload(Nouns.LOCATION);
-	assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+	Response response = sendPayload(Nouns.LOCATION, false, METHOD.POST);
+ 	assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
     }
 
     @Test
     public void shouldPutNewLocationContentLocationInHeader(){
-	Response response = putPayload(Nouns.LOCATION);
+	Response response = sendPayload(Nouns.LOCATION, false, METHOD.POST);
 	assertTrue(response.getHeaders().containsKey(WSConstants.CONTENT_LOCATION));
     }
 
     @Test
     public void putLocationShouldFailIfIdIsSet(){
-	Response response = putPayload(Nouns.LOCATION, true);
+	Response response = sendPayload(Nouns.LOCATION, true, METHOD.POST);
 	assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
     }
-
 
 
     ////////////////////////////////////////////////
     // MIXED_SPECIMEN
     @Test
     public void shouldCreateNewMixedSpecimen(){
-	Response response = putPayload(Nouns.MIXED_SPECIMEN);
+	Response response = sendPayload(Nouns.MIXED_SPECIMEN, false, METHOD.POST);
 	assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
     }
 
     @Test
     public void shouldPutNewMixedSpecimenContentLocationInHeader(){
-	Response response = putPayload(Nouns.MIXED_SPECIMEN);
+	Response response = sendPayload(Nouns.MIXED_SPECIMEN, false, METHOD.POST);
 	assertTrue(response.getHeaders().containsKey(WSConstants.CONTENT_LOCATION));
     }
 
     @Test
     public void putMixedSpecimenShouldFailIfIdIsSet(){
-	Response response = putPayload(Nouns.MIXED_SPECIMEN, true);
+	Response response = sendPayload(Nouns.MIXED_SPECIMEN, true, METHOD.POST);
 	assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
     }
 

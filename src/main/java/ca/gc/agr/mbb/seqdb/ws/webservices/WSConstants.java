@@ -25,4 +25,14 @@ public interface WSConstants{
     // http headers
     public static String CONTENT_LOCATION = "Content-Location";
 
+
+    public enum METHOD {
+	DELETE,
+	GET, 
+	HEAD, 
+	OPTIONS,
+	POST, 
+	PUT, 
+    }
+
 }

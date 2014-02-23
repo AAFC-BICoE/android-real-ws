@@ -1,5 +1,6 @@
 package ca.gc.agr.mbb.seqdb.ws.webservices;
 
+import ca.gc.agr.mbb.seqdb.ws.webservices.WSConstants;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -18,7 +19,7 @@ import ca.gc.agr.mbb.seqdb.ws.payload.Location;
 import com.google.gson.Gson;
 import org.glassfish.grizzly.http.server.HttpServer;
 
-abstract public class BaseTest{
+abstract public class BaseTest implements WSConstants{
     protected HttpServer server = null;
     protected WebTarget target;
     protected Gson gson = null;
@@ -47,11 +48,7 @@ abstract public class BaseTest{
 	return "{\"" + p.getClass().getSimpleName() + "\": " + gson.toJson(p) + "}";
     }
 
-    protected Response putPayload(String payloadKey){
-	return putPayload(payloadKey, false);
-    }
-
-    protected Response putPayload(String noun, boolean setId){
+    protected Response sendPayload(String noun, boolean setId, WSConstants.METHOD method){
 	String path = WSConstants.BASEPATH + noun;
 	BasePayload p=null;
 
@@ -70,10 +67,21 @@ abstract public class BaseTest{
 	}
 
 	if(setId){
-	    p.id = new Long(42);
+	    p.id = new Long(9999);
 	}
 	Entity entity = Entity.entity(toJson(p), MediaType.APPLICATION_JSON);
-	Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).put(entity);
+
+	Response response;
+	switch(method){
+	    case POST:
+		response = target.path(path).request().accept(MediaType.APPLICATION_JSON).post(entity);
+		break;
+ 	    case PUT:
+		response = target.path(path).request().accept(MediaType.APPLICATION_JSON).put(entity);
+		break;
+	    default:
+		throw new NullPointerException("Not supported http method: " + method);
+	}
 	System.err.println("Client response location: " + response.getLocation());
 	System.err.println("Headers: " + response.getHeaders());
 	System.err.println("Headers: Content-Location:" + response.getHeaders().getFirst(WSConstants.CONTENT_LOCATION));
