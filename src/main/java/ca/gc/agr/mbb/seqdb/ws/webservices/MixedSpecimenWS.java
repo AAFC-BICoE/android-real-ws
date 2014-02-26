@@ -124,5 +124,33 @@ public class MixedSpecimenWS  extends BaseWS implements Nouns, WSConstants{
 	}
     }
 
+
+    /////////////// PUT (update)
+    @PUT @Path(MIXED_SPECIMEN+ID_PARAM)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateMixedSpecimen(String json, @PathParam(ID) final long id, @Context UriInfo uri) {
+	System.err.println("####################################################################################################");
+	System.err.println("PUT updateMixedSpecimen: id=" + id);
+    	try{
+	    if(!MockState.mixedSpecimenMap.containsKey(id)){
+		System.err.println("######################### Not able to find id=" + id);
+		return notFound(MIXED_SPECIMEN, id);
+	    }
+    	    System.err.println("MixedSpecimen update id="
+			       + id
+			       + " json=[" + json + "]");
+	    MixedSpecimen mixedSpecimen = MockState.mixedSpecimenMap.get(id);
+	    
+    	    MixedSpecimen newMixedSpecimen = (MixedSpecimen)fromJson(json, MixedSpecimen.class);
+	    mixedSpecimen.update(newMixedSpecimen);
+
+    	    URI contentLocationURI = null;
+    	    //contentLocationURI = new URI(uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION + "/" + MIXEDSPECIMEN + "/" + newId);
+    	    return Response.status(Response.Status.ACCEPTED).build();
+    	}catch(Throwable t){
+    	    return fatal(t);
+    	}
+    }
+
 }
 

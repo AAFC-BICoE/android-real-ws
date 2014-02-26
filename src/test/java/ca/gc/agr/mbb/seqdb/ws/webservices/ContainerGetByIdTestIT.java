@@ -24,12 +24,12 @@ import org.junit.runners.Parameterized.Parameters;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class) 
-public class ContainerGetByIdTest extends BaseTest{
+public class ContainerGetByIdTestIT extends BaseTestIT{
     private int containerRange = 5;
     private Long id = null;
     private Long expectedId = null;
 
-    public ContainerGetByIdTest(final Long id, final Long expectedId){
+    public ContainerGetByIdTestIT(final Long id, final Long expectedId){
 	this.id = id;
 	//this.expectedId = expectedId;
     }
@@ -66,7 +66,7 @@ public class ContainerGetByIdTest extends BaseTest{
 	String path = WSConstants.BASEPATH + Nouns.CONTAINER + "/" +  id;
 	System.err.println("path=[" + path + "]");
 	Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).get();
-	assertEquals(200, response.getStatus());
+	assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class ContainerGetByIdTest extends BaseTest{
     	String path = WSConstants.BASEPATH + Nouns.CONTAINER + "/" +  id + "b";
     	System.err.println("path=[" + path + "]");
     	Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).get();
-    	assertEquals(404, response.getStatus());
+    	assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class ContainerGetByIdTest extends BaseTest{
     	String path = WSConstants.BASEPATH + Nouns.CONTAINER + "/" + outOfRangeId;
     	System.err.println("path=[" + path + "]");
     	Response response = target.path(path).request().accept(MediaType.APPLICATION_JSON).get();
-    	assertEquals(404, response.getStatus());
+    	assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
     }
 }
 

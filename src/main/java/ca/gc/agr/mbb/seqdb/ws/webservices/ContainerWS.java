@@ -95,7 +95,7 @@ public class ContainerWS  extends BaseWS implements Nouns, WSConstants{
 	return Response.status(Response.Status.NO_CONTENT).build();
     }
 
-    /////////////// PUT (create)
+    /////////////// POST (create)
     @POST @Path(CONTAINER)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createContainer(String json, @Context UriInfo uri) {
@@ -116,25 +116,31 @@ public class ContainerWS  extends BaseWS implements Nouns, WSConstants{
 	}
     }
 
-    /////////////// POST (create)
-    // @PUT @Path(CONTAINER)
-    // @Consumes(MediaType.APPLICATION_JSON)
-    // public Response createContainer(String json, @Context UriInfo uri) {
-    // 	try{
-    // 	    System.err.println("Container put json=[" + json + "]");
-    // 	    Container container = null;
-    // 	    container = (Container)fromJson(json, Container.class);
+    /////////////// PUT (update)
+    @PUT @Path(CONTAINER+ID_PARAM)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateContainer(String json, @PathParam(ID) final long id, @Context UriInfo uri) {
+	System.err.println("####################################################################################################");
+	System.err.println("PUT updateContainer: id=" + id);
+    	try{
+	    if(!MockState.containerMap.containsKey(id)){
+		System.err.println("######################### Not able to find id=" + id);
+		return notFound(CONTAINER, id);
+	    }
+    	    System.err.println("Container update id="
+			       + id
+			       + " json=[" + json + "]");
+	    Container container = MockState.containerMap.get(id);
 	    
-    // 	    int newId = MockState.containers.size() +1;
-    // 	    MockState.addNewContainer(newId);
-    // 	    container.id = new Long(newId);
-    // 	    System.err.println("Container: " + container);
-    // 	    URI contentLocationURI = null;
-    // 	    contentLocationURI = new URI(uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION + "/" + CONTAINER + "/" + newId);
-    // 	    return Response.status(Response.Status.CREATED).contentLocation(contentLocationURI).build();
-    // 	}catch(Throwable t){
-    // 	    return fatal(t);
-    // 	}
-    // }
+    	    Container newContainer = (Container)fromJson(json, Container.class);
+	    container.update(newContainer);
+
+    	    URI contentLocationURI = null;
+    	    //contentLocationURI = new URI(uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION + "/" + CONTAINER + "/" + newId);
+    	    return Response.status(Response.Status.ACCEPTED).build();
+    	}catch(Throwable t){
+    	    return fatal(t);
+    	}
+    }
 
 }

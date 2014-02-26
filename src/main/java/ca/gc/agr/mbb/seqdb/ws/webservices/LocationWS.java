@@ -121,7 +121,7 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
 	return Response.status(Response.Status.NO_CONTENT).build();
     }
 
-    /////////////// PUT (create)
+    /////////////// POST (create)
     @POST @Path(LOCATION)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createLocation(String json, @Context UriInfo uri) throws Throwable {
@@ -144,5 +144,34 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
 	    return fatal(t);
 	}
     }    
+
+
+
+    /////////////// PUT (update)
+    @PUT @Path(LOCATION+ID_PARAM)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateLocation(String json, @PathParam(ID) final long id, @Context UriInfo uri) {
+	System.err.println("####################################################################################################");
+	System.err.println("PUT updateLocation: id=" + id);
+    	try{
+	    if(!MockState.locationMap.containsKey(id)){
+		System.err.println("######################### Not able to find id=" + id);
+		return notFound(LOCATION, id);
+	    }
+    	    System.err.println("Location update id="
+			       + id
+			       + " json=[" + json + "]");
+	    Location location = MockState.locationMap.get(id);
+	    
+    	    Location newLocation = (Location)fromJson(json, Location.class);
+	    location.update(newLocation);
+
+    	    URI contentLocationURI = null;
+    	    //contentLocationURI = new URI(uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION + "/" + LOCATION + "/" + newId);
+    	    return Response.status(Response.Status.ACCEPTED).build();
+    	}catch(Throwable t){
+    	    return fatal(t);
+    	}
+    }
 
 }

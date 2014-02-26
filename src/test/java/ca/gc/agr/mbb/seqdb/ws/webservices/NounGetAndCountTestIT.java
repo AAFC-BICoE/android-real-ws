@@ -21,12 +21,12 @@ import org.junit.runners.Parameterized.Parameters;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class) 
-public class NounGetAndCountTest extends BaseTest{
+public class NounGetAndCountTestIT extends BaseTestIT{
     
     private String noun = null;
     private String expected = null;
 
-    public NounGetAndCountTest(final String noun, final String expected){
+    public NounGetAndCountTestIT(final String noun, final String expected){
 	this.noun = noun;
 	this.expected = expected;
     }

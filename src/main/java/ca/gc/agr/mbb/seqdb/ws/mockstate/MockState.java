@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.UUID;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Calendar;
 
 
 public class MockState{
@@ -17,6 +20,9 @@ public class MockState{
     public static int containerRange = 60;
     public static int locationRange = 110;
 
+    public static int numberOfColumns = 8;
+    public static int numberOfRows = 8;
+    public static int numberOfWells = numberOfRows * numberOfColumns;
 
     public static int numContainers;
     public static int numLocations;
@@ -47,7 +53,7 @@ public class MockState{
 	containers = new ArrayList<Container>(numContainers);
 	containerMap = new HashMap<Long, Container>(numContainers);
 	for(int i=0; i<numContainers; i++){
-	    addNewContainer(i);
+	    addNewContainer(i );
 	}
 	
 	locations = new ArrayList<Location>(numLocations);
@@ -82,8 +88,14 @@ public class MockState{
 	return mixedSpecimens.size();
     }
 
+    public static String timeStamp(){
+	return Calendar.getInstance().getTime().toString();
+    }
+
     public static final void addNewContainer(int i){
 	Container newContainer = new Container((long)i);
+	newContainer.containerNumber = "" + random.nextInt(10) + "-" + random.nextInt(20000);
+	newContainer.lastModified = timeStamp();
 	containers.add(newContainer);
 	    containerMap.put((long)i, newContainer);
 	    List<Long> locationList = new ArrayList<Long>();
@@ -94,8 +106,10 @@ public class MockState{
 	try{
 	    Location loc = new Location((long)i);
 	    loc.mixedSpecimen = makeMixedSpecimen();
-	    addNewMixedSpecimen(i);
-	    loc.mixedSpecimen.id = (long)i;
+	    loc.lastModified = timeStamp();
+	    int mixedSpecimenId = 20000 + random.nextInt(20000);
+	    addNewMixedSpecimen(mixedSpecimenId);
+	    loc.mixedSpecimen.id = (long)mixedSpecimenId;
 
 	    locationMap.put((long)i, loc);
 	    loc.wellRow = "A";

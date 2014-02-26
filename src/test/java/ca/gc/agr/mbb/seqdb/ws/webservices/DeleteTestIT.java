@@ -16,9 +16,9 @@ import org.junit.runners.Parameterized.Parameters;
 
 import static org.junit.Assert.assertEquals;
 
-public class DeleteTest extends BaseTest{
+public class DeleteTestIT extends BaseTestIT{
     static final int KNOWN_ID = 2;
-    public DeleteTest(){
+    public DeleteTestIT(){
 
     }
 
