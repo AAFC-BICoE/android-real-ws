@@ -2,6 +2,7 @@ package ca.gc.agr.mbb.seqdb.ws.mockstate;
 
 import ca.gc.agr.mbb.seqdb.ws.payload.Location;
 import ca.gc.agr.mbb.seqdb.ws.payload.Container;
+import ca.gc.agr.mbb.seqdb.ws.payload.ContainerType;
 import ca.gc.agr.mbb.seqdb.ws.payload.MixedSpecimen;
 import java.util.Random;
 import java.util.List;
@@ -37,6 +38,8 @@ public class MockState{
     public static Map<Long, Location> locationMap; 
     public static Map<Long, MixedSpecimen> mixedSpecimenMap; 
 
+    public static ContainerType containerType1 = null;
+
     static Random random = new Random();
 
     static{
@@ -44,6 +47,7 @@ public class MockState{
     }
 
     public static final void init() {
+	containerType1 = addNewContainerType("Acme");
 	numContainers = containerRange;
 	numLocations = locationRange;
 
@@ -94,12 +98,13 @@ public class MockState{
 
     public static final void addNewContainer(int i){
 	Container newContainer = new Container((long)i);
+	newContainer.containerType = addNewContainerType(i);
 	newContainer.containerNumber = "" + random.nextInt(10) + "-" + random.nextInt(20000);
 	newContainer.lastModified = timeStamp();
 	containers.add(newContainer);
-	    containerMap.put((long)i, newContainer);
-	    List<Long> locationList = new ArrayList<Long>();
-	    containerLocationsMap.put((long)i, locationList);
+	containerMap.put((long)i, newContainer);
+	List<Long> locationList = new ArrayList<Long>();
+	containerLocationsMap.put((long)i, locationList);
     }
 
     public static final void addNewLocation(int i){
@@ -151,4 +156,21 @@ public class MockState{
 	m.project = UUID.randomUUID().toString().substring(0,6);
 	return m;
     }
+
+    public static ContainerType addNewContainerType(int i){
+	return containerType1;
+    }
+    
+    public static ContainerType addNewContainerType(String name){
+	ContainerType ct = new ContainerType();
+	ct.baseType = "standard #1";
+	ct.name = name;
+
+	ct.numberOfColumns = 8;
+	ct.numberOfRows = 12;
+	ct.numberOfWells = ct.numberOfRows * ct.numberOfColumns;
+
+	return ct;
+    }
+
 }
