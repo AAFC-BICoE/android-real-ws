@@ -73,7 +73,11 @@ public class MixedSpecimenWS  extends BaseWS implements Nouns, WSConstants{
 		System.err.println("Not able to find id=" + id);
 		return notFound(MIXED_SPECIMEN, id);
 	    }
+
 	    MixedSpecimen mixedSpecimen = MockState.mixedSpecimenMap.get(id);
+	    System.err.println("Got mixed specimen id: " + id + " actual: " + mixedSpecimen.id);
+	    makeMixedSpecimenLocation(mixedSpecimen, uri.getBaseUri().toString());
+
 	    System.err.println("Found mxedSpecimen: " + mixedSpecimen.fungiIsolated);
 	    Envelope envelope = new Envelope(uri, mixedSpecimen);
 	    return ok(envelope);
@@ -113,8 +117,9 @@ public class MixedSpecimenWS  extends BaseWS implements Nouns, WSConstants{
 	    mixedSpecimen = (MixedSpecimen)fromJson(json, MixedSpecimen.class);
 	    
 	    int newId = MockState.mixedSpecimens.size() +1;
-	    MockState.addNewMixedSpecimen(newId);
 	    mixedSpecimen.id = new Long(newId);
+	    MockState.addMixedSpecimen(mixedSpecimen);
+
 	    System.err.println("MixedSpecimen: " + mixedSpecimen);
 	    URI contentLocationURI = null;
 	    contentLocationURI = new URI(uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION + "/" + MIXED_SPECIMEN + "/" + newId);
@@ -152,5 +157,16 @@ public class MixedSpecimenWS  extends BaseWS implements Nouns, WSConstants{
     	}
     }
 
+
+    private void makeMixedSpecimenLocation(MixedSpecimen ms, String uri){
+	System.err.println("makeMixedSpecimenLocation");
+	if(ms.location == null){
+	System.err.println(">>> makeMixedSpecimenLocation: LOCATION IS NULL!!!!!!!!");
+	    return;
+	}
+	uri += WSConstants.BASEPATH + LOCATION + "/" + ms.location.id;
+	ms.locationUrl = uri;
+	System.err.println("makeMixedSpecimenLocation: " + uri);
+    }
 }
 

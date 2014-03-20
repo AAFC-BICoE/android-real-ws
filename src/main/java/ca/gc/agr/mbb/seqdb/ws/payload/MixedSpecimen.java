@@ -9,6 +9,9 @@ public class MixedSpecimen extends BasePayload{
     public String treatment;
     public String project;
 
+    public String locationUrl;
+    transient public Location location = null;
+
     //public Date sampleDestroyed;
     //public Timestamp lastModified;
 

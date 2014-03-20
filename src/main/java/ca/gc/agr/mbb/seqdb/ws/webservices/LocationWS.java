@@ -77,6 +77,7 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
 	    return notFound(LOCATION, id);
 	}
 	Location location = MockState.locationMap.get(id);
+	makeLocationMixedSpecimen(location, uri.getBaseUri().toString());
 	System.err.println("Location by id=" + id + " #locations=" + MockState.locations.size());
 	Envelope envelope = new Envelope(uri, location);
 	return ok(envelope);
@@ -174,4 +175,16 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
     	}
     }
 
+
+    private void makeLocationMixedSpecimen(Location loc, String uri){
+	System.err.println("LocationmakeMixedSpecimen");
+	if(loc.mixedSpecimen == null){
+	System.err.println(">>> makeLocationMixedSpecimen: MixedSpecimen IS NULL!!!!!!!!");
+	    return;
+	}
+	uri += WSConstants.BASEPATH + MIXED_SPECIMEN + "/" + loc.mixedSpecimen.id;
+
+	loc.mixedSpecimenUrl = uri;
+	System.err.println("makeLocationMixedSpecimen: " + uri);
+    }
 }

@@ -10,8 +10,10 @@ public class Location extends BasePayload{
     public String wellRow=null;
     public Long containerId=null;
     public String lastModified = null;
+    public String mixedSpecimenUrl=null;
 
-    public MixedSpecimen mixedSpecimen=null;
+    transient public MixedSpecimen mixedSpecimen=null;
+
 
     public Location(String id){
 	this(Long.parseLong(id));

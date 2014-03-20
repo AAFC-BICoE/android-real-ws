@@ -110,11 +110,14 @@ public class MockState{
     public static final void addNewLocation(int i){
 	try{
 	    Location loc = new Location((long)i);
-	    loc.mixedSpecimen = makeMixedSpecimen();
-	    loc.lastModified = timeStamp();
 	    int mixedSpecimenId = 20000 + random.nextInt(20000);
-	    addNewMixedSpecimen(mixedSpecimenId);
-	    loc.mixedSpecimen.id = (long)mixedSpecimenId;
+	    loc.mixedSpecimen = makeMixedSpecimen(mixedSpecimenId);
+	    addMixedSpecimen(loc.mixedSpecimen);
+	    loc.mixedSpecimen.location = loc;
+	    loc.lastModified = timeStamp();
+
+	    //addNewMixedSpecimen(mixedSpecimenId);
+	    System.err.println("MockState.addNewLocation: mixedSpecimenId: " + 	loc.mixedSpecimen.id);
 
 	    locationMap.put((long)i, loc);
 	    loc.wellRow = "A";
@@ -141,19 +144,19 @@ public class MockState{
 	}
     }
 
-    public static final void addNewMixedSpecimen(int i){
-	MixedSpecimen ms = makeMixedSpecimen();
-	mixedSpecimenMap.put((long)i, ms);
+    public static final void addMixedSpecimen(MixedSpecimen ms){
+	mixedSpecimenMap.put(ms.id, ms);
 	mixedSpecimens.add(ms);
+	System.err.println("MockState.addNewMixedSpecimen: mixedSpecimenId: " + ms.id);
     }
 
-    public static MixedSpecimen makeMixedSpecimen(){
+    public static MixedSpecimen makeMixedSpecimen(int id){
 	MixedSpecimen m = new MixedSpecimen();
-	
 	m.fungiIsolated = TextContent.randomFungus();
 	m.notes = TextContent.randomText();
 	m.treatment = TextContent.randomText();
 	m.project = UUID.randomUUID().toString().substring(0,6);
+	m.id = (long)id;
 	return m;
     }
 
