@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.UUID;
 
 import java.sql.Timestamp;
@@ -29,6 +31,11 @@ public class MockState{
     public static int numLocations;
 
     public static Map<Long,List<Long>>containerLocationsMap = new HashMap<Long, List<Long>>(containerRange);
+
+    // this represents an occupied container column row
+    // "containerID_column_row"
+    public static Set<String> occupiedContainerIDLocationColumnRow = new HashSet<String>();
+    
 
     public static List<Container> containers; 
     public static List<Location> locations; 
@@ -107,41 +114,63 @@ public class MockState{
 	containerLocationsMap.put((long)i, locationList);
     }
 
-    public static final void addNewLocation(int i){
+    public static final void addNewLocation(int locationId){
 	try{
-	    Location loc = new Location((long)i);
+	    Location loc = new Location((long)locationId);
 	    int mixedSpecimenId = 20000 + random.nextInt(20000);
-	    loc.mixedSpecimen = makeMixedSpecimen(mixedSpecimenId);
+	    loc.mixedSpecimen = makeMixedSpecimen(mixedSpecimenId, (long)locationId);
 	    addMixedSpecimen(loc.mixedSpecimen);
 	    loc.mixedSpecimen.location = loc;
+	    loc.mixedSpecimenId = loc.mixedSpecimen.id;
+
 	    loc.lastModified = timeStamp();
 
 	    //addNewMixedSpecimen(mixedSpecimenId);
 	    System.err.println("MockState.addNewLocation: mixedSpecimenId: " + 	loc.mixedSpecimen.id);
 
-	    locationMap.put((long)i, loc);
+	    locationMap.put((long)locationId, loc);
 	    loc.wellRow = "A";
 	    locations.add(loc);
-	    int containerId = random.nextInt(numContainers);
-	    loc.containerId = (long)containerId;
-	    loc.wellColumn = 1 + random.nextInt(7);
-	    switch (loc.wellColumn){
-	    case 1:
-	    case 2:
-		loc.wellRow = "A";
-		break;
-	    case 3:
-	    case 4:
-		loc.wellRow = "E";
-		break;
-	    default:
-		loc.wellRow = "B";
+	    
+	    while(true){
+		int containerId = random.nextInt(numContainers);
+		loc.containerId = (long)containerId;
+		loc.wellColumn = 1 + random.nextInt(7);
+		switch (loc.wellColumn){
+		case 1:
+		    loc.wellRow = "A";
+		    break;
+		case 2:
+		    loc.wellRow = "B";
+		    break;
+		case 3:
+		    loc.wellRow = "C";
+		    break;
+		case 4:
+		    loc.wellRow = "D";
+		    break;
+		case 5:
+		    loc.wellRow = "E";
+		    break;
+		default:
+		    loc.wellRow = "F";
+		}
+		String occupiedKey = makeOccupied(containerId, loc.wellColumn, loc.wellRow);
+		if(!occupiedContainerIDLocationColumnRow.contains(occupiedKey)){
+		    occupiedContainerIDLocationColumnRow.add(occupiedKey);
+		    System.err.println("Adding occupied: " + occupiedKey);
+		    containerLocationsMap.get((long)containerId).add((long)locationId);	
+		    break;
+		}
 	    }
-	    containerLocationsMap.get((long)containerId).add((long)i);	
 	}
 	catch(Throwable t){
 	    t.printStackTrace();
 	}
+    }
+
+    static final String makeOccupied(int containerId, Integer column, String row){
+	return Integer.toString(containerId) + "_" + Integer.toString(column) + "_" + row;
     }
 
     public static final void addMixedSpecimen(MixedSpecimen ms){
@@ -150,13 +179,14 @@ public class MockState{
 	System.err.println("MockState.addNewMixedSpecimen: mixedSpecimenId: " + ms.id);
     }
 
-    public static MixedSpecimen makeMixedSpecimen(int id){
+    public static MixedSpecimen makeMixedSpecimen(int id, long locationId){
 	MixedSpecimen m = new MixedSpecimen();
 	m.fungiIsolated = TextContent.randomFungus();
 	m.notes = TextContent.randomText();
 	m.treatment = TextContent.randomText();
 	m.project = UUID.randomUUID().toString().substring(0,6);
 	m.id = (long)id;
+	m.locationId = locationId;
 	return m;
     }
 
@@ -176,4 +206,55 @@ public class MockState{
 	return ct;
     }
 
+
+    public static void updateMixedSpecimen(MixedSpecimen oldMs, MixedSpecimen newMs){
+	if(newMs.mixedSpecimenNumber != null){
+	    oldMs.mixedSpecimenNumber = newMs.mixedSpecimenNumber;
+	}
+
+	if(newMs.fungiIsolated != null){
+	    oldMs.fungiIsolated = newMs.fungiIsolated;
+	}
+
+	if(newMs.notes != null){
+	    oldMs.notes = newMs.notes;
+	}
+
+	if(newMs.treatment != null){
+	    oldMs.treatment = newMs.treatment;
+	}
+
+	if(newMs.project != null){
+	    oldMs.project = newMs.project;
+	}
+	
+	if(newMs.locationId != null){
+	    oldMs.locationId = newMs.locationId;
+	}
+    }
+
+    public static void updateLocation(Location oldLoc, Location newLoc)
+	throws OccupiedLocationException, UnknownEntityException,IllegalArgumentException
+    {
+	if(!containerMap.containsKey(newLoc.containerId)){
+	    throw new UnknownEntityException("Container id=" + newLoc.containerId + " does not exist");
+	}
+
+	String occupiedKey = makeOccupied((int)((long)newLoc.containerId), newLoc.wellColumn, newLoc.wellRow);
+
+	if(occupiedContainerIDLocationColumnRow.contains(occupiedKey)){
+	    throw new OccupiedLocationException("Location is occupied");
+	}
+
+	if(oldLoc.containerId != newLoc.containerId){
+	    List<Long>locations = containerLocationsMap.get(oldLoc.containerId);
+	    locations.remove(oldLoc.id);
+
+	    locations = containerLocationsMap.get((int)((long)newLoc.containerId));
+	    locations.add(oldLoc.id);
+	}
+	oldLoc.wellColumn = newLoc.wellColumn;
+	oldLoc.wellRow = newLoc.wellRow;
+	oldLoc.containerId = newLoc.containerId;
+    }
 }

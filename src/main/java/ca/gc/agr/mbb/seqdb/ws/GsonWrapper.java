@@ -14,7 +14,6 @@ public class GsonWrapper {
     }
 
     public String toJson(Envelope e){
-
 	try{
 	    String json = gson.toJson(e);
 	    e.getMeta().ellapsedMillis = System.currentTimeMillis() - e.getMeta().startMillis;
@@ -32,11 +31,13 @@ public class GsonWrapper {
 	try{
 	    logger.log(Level.INFO, "fromGson: trying");
 	    Object toObject = gson.fromJson(s, toClass);
-	    logger.log(Level.INFO, "fromGson: success");;
+	    //logger.log(Level.INFO, "fromGson: success: " + toObject);;
 	    return toObject;
 	}catch(JsonSyntaxException e){
 	    logger.log(Level.SEVERE, "gson error", e);
 	    e.printStackTrace();
+	}catch(Throwable t){
+	    t.printStackTrace();
 	}
 	return null;
     }

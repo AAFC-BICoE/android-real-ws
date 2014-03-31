@@ -46,58 +46,77 @@ abstract public class BaseTestIT implements WSConstants{
 	    throw new NullPointerException("Payload is null");
 	}
 	System.err.println("Class Name=" + p.getClass().getSimpleName().toLowerCase());
-	return "{\"" + p.getClass().getSimpleName() + "\": " + gson.toJson(p) + "}";
+	//return "{\"" + p.getClass().getSimpleName() + "\": " + gson.toJson(p) + "}";
+	return gson.toJson(p);
     }
 
     protected Response sendPayload(String noun, WSConstants.METHOD method){
-	return sendPayload(noun, false, 0, method);
+	return sendPayload(null, noun, false, 0, method);
     }
 
     protected Response sendPayload(String noun, long id, WSConstants.METHOD method){
-	return sendPayload(noun, true, id, method);
+	return sendPayload(null, noun, true, id, method);
     }
 
-    protected Response sendPayload(String noun, boolean setId, long id, WSConstants.METHOD method){
+    protected Response sendPayload(Payload payload, String noun, boolean setId, long id, WSConstants.METHOD method){
 	try{
-	System.err.println("START--------------------------------------------------------------------------");
-	String path = WSConstants.BASEPATH + noun;
-	if(method == WSConstants.METHOD.PUT){
-	    path += "/" +  id;
-	}
-	BasePayload p=null;
+	    System.err.println("START--------------------------------------------------------------------------");
+	    if(payload != null){
+		System.err.println(" ##** Location.containerId=" + ((Location)payload).containerId);
+	    }
+	    String path = WSConstants.BASEPATH + noun;
+	    if(method == WSConstants.METHOD.PUT){
+		path += "/";
+		if(payload != null){
+		    path += ((BasePayload)payload).id;
+		}else{
+		    path += id;
+		}
+	    }
 
 	System.err.println("Client: " + method + " NOUN: " + noun);
 	System.err.println("Client: " + method + " PATH: " + path);
-
-	switch(noun){
-	case Nouns.CONTAINER:
-	    if(setId && MockState.containerMap.containsKey(id)){
-		p = MockState.containerMap.get(id);
-	    }else{
-		p = new Container();
+	System.err.println("Client: " + method + " id: " + id);
+	if(payload != null){
+	    System.err.println(" ##** Location.containerId=" + ((Location)payload).containerId);
+	}
+	if(payload == null){
+	    switch(noun){
+	    case Nouns.CONTAINER:
+		if(setId && MockState.containerMap.containsKey(id)){
+		    payload = MockState.containerMap.get(id);
+		}else{
+		    payload = new Container();
+		}
+		break;
+	    case Nouns.LOCATION:
+		if(setId && MockState.locationMap.containsKey(id)){
+		    payload = MockState.locationMap.get(id);
+		}else{
+		    payload = new Location();
+		    ((Location)payload).mixedSpecimen = null;
+		}
+		break;
+	    case Nouns.MIXED_SPECIMEN:
+		if(setId && MockState.mixedSpecimenMap.containsKey(id)){
+		    payload = MockState.mixedSpecimenMap.get(id);
+		}else{
+		    payload = new MixedSpecimen();
+		}
+		break;
 	    }
-	    break;
-	case Nouns.LOCATION:
-	    if(setId && MockState.locationMap.containsKey(id)){
-		p = MockState.locationMap.get(id);
-	    }else{
-		p = new Location();
-		((Location)p).mixedSpecimen = null;
+	    
+	    if(setId){
+		((BasePayload)payload).id = id;
+		//p.id = new Long(9999);
+		//((BasePayload)payload).id = new Long(9999);
 	    }
-	    break;
-	case Nouns.MIXED_SPECIMEN:
-	    if(setId && MockState.mixedSpecimenMap.containsKey(id)){
-		p = MockState.mixedSpecimenMap.get(id);
-	    }else{
-		p = new MixedSpecimen();
-	    }
-	    break;
+	}
+	if(payload != null && payload instanceof Location){
+	    System.err.println(" ** Location.containerId=" + ((Location)payload).containerId);
 	}
 
-	if(setId){
-	    p.id = new Long(16745);
-	}
-	String json = toJson(p);
+	String json = toJson(payload);
 	Entity entity = Entity.entity(json, MediaType.APPLICATION_JSON);
 	System.err.println("Client sending json: " + json);
 	System.err.println("SENDING--------------------------------------------------------------------------");

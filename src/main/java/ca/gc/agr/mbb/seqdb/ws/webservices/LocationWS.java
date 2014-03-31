@@ -163,13 +163,15 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
 			       + id
 			       + " json=[" + json + "]");
 	    Location location = MockState.locationMap.get(id);
+	    Location newLocation = (Location)fromJson(json, Location.class);
+	    System.err.println(location);
+	    System.err.println(newLocation);
 	    
-    	    Location newLocation = (Location)fromJson(json, Location.class);
-	    location.update(newLocation);
+	    MockState.updateLocation(location, newLocation);
 
     	    URI contentLocationURI = null;
     	    //contentLocationURI = new URI(uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION + "/" + LOCATION + "/" + newId);
-    	    return Response.status(Response.Status.ACCEPTED).build();
+    	    return Response.status(Response.Status.NO_CONTENT).build();
     	}catch(Throwable t){
     	    return fatal(t);
     	}
@@ -177,6 +179,10 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
 
 
     private void makeLocationMixedSpecimen(Location loc, String uri){
+	if(!ALL_DEBUG){
+	    loc.debugMixedSpecimenUrl = null;
+	    return;
+	}
 	System.err.println("LocationmakeMixedSpecimen");
 	if(loc.mixedSpecimen == null){
 	System.err.println(">>> makeLocationMixedSpecimen: MixedSpecimen IS NULL!!!!!!!!");
@@ -184,7 +190,7 @@ public class LocationWS  extends BaseWS implements Nouns, WSConstants{
 	}
 	uri += WSConstants.BASEPATH + MIXED_SPECIMEN + "/" + loc.mixedSpecimen.id;
 
-	loc.mixedSpecimenUrl = uri;
+	loc.debugMixedSpecimenUrl = uri;
 	System.err.println("makeLocationMixedSpecimen: " + uri);
     }
 }

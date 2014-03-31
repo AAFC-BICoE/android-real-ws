@@ -10,7 +10,8 @@ public class Location extends BasePayload{
     public String wellRow=null;
     public Long containerId=null;
     public String lastModified = null;
-    public String mixedSpecimenUrl=null;
+    public String debugMixedSpecimenUrl=null;
+    public Long mixedSpecimenId=null;
 
     transient public MixedSpecimen mixedSpecimen=null;
 
@@ -28,28 +29,6 @@ public class Location extends BasePayload{
 
     }
 
-    public void update(Payload payload){
-	super.update(payload);
-	if(payload == null){
-	    return;
-	}
-	Location u = (Location)payload;
-	
-	if(u.wellColumn != null){
-	    this.wellColumn = u.wellColumn;
-	}
-
-	if(u.wellRow != null){
-	    this.wellRow = u.wellRow;
-	}
-
-	if(u.containerId != null){
-	    this.containerId = u.containerId;
-	}
-	if(this.mixedSpecimen != null){
-	    this.mixedSpecimen.update(u.mixedSpecimen);
-	}	
-    }
 
     public String toString(){
 	return id.toString();

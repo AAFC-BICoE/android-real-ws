@@ -133,7 +133,6 @@ public class ContainerWS  extends BaseWS implements Nouns, WSConstants{
 	    Container container = MockState.containerMap.get(id);
 	    
     	    Container newContainer = (Container)fromJson(json, Container.class);
-	    container.update(newContainer);
 
     	    URI contentLocationURI = null;
     	    //contentLocationURI = new URI(uri.getBaseUri().toString() + WSConstants.BASEPATH + LOCATION + "/" + CONTAINER + "/" + newId);
